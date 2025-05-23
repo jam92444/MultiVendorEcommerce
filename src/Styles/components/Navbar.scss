@@ -1,0 +1,80 @@
+@import "../abstracts/index";
+
+.navbar {
+
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  padding: 0.8rem 1.5rem;
+  font-family: $font-family;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+
+  &__container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  &__logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+  }
+
+  &__toggle {
+    display: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+  }
+
+  &__menu {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+
+    li a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+
+      &:hover {
+        color: #007bff;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    &__toggle {
+      display: block;
+    }
+
+    &__menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      flex-direction: column;
+      background: #fff;
+      border-top: 1px solid #eee;
+      display: none;
+
+      li {
+        padding: 1rem;
+        border-bottom: 1px solid #f0f0f0;
+      }
+    }
+
+    &__menu.active {
+      display: flex;
+    }
+  }
+}

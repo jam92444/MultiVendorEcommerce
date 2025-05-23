@@ -1,13 +1,11 @@
-import React from 'react'
-import Router from './Routes/Router'
-import AppRouter from './Routes/Router'
-
+import React from "react";
+import { HashRouter, RouterProvider } from "react-router-dom";
+import router from "./Routes/Router";
+import "./Styles/main.scss"
 const App = () => {
   return (
-    <div>
-      <AppRouter/>
-    </div>
-  )
-}
+      <RouterProvider router={router} />
+  );
+};
 
-export default App
+export default App;

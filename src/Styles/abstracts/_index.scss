@@ -1,0 +1,12 @@
+// src/styles/abstracts/_index.scss
+@forward "variables";
+@forward "mixins";
+@forward "breakpoints";
+@forward "fonts";
+@forward "../layout/container";
+
+body{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}

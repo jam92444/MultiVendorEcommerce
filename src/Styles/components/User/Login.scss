@@ -1,0 +1,133 @@
+@use "../../abstracts/index" as *;
+
+.login {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  margin-top: 2rem;
+  @include flex-center-between;
+
+  // Background layer
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    // background: url("../../../assets/Images/avif/shopping-background.avif")
+    //   no-repeat center center;
+    // background-size: cover;
+    filter: brightness(0.7);
+    z-index: 1;
+  }
+
+  .forms {
+    position: relative;
+    z-index: 2; // Make sure form stays above the blurred background
+    width: 100%;
+
+    .Login-form {
+      box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+      z-index: 100;
+      @include flex-col-center-center;
+      background-color: white;
+      gap: 2rem;
+      // max-width: 100;
+      width: 450px;
+      padding: 2rem;
+      border-radius: 2%;
+      margin: 0 auto;
+      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+      p {
+        text-align: center;
+        font-size: $titleSize;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+      .desc{
+        font-size: $font-xs;
+        color: #c2c2c2;
+        margin-top: -2rem;
+        text-transform: capitalize;
+        font-weight: 400
+      }
+      .content {
+        @include flexcol-start;
+        gap: 0.7rem;
+        width: 100%;
+        .inputBox {
+          padding: 0.7rem 1rem;
+          width: 100%;
+          font-size: $font-sm;
+          border-radius: 4px;
+          border: 0.5px solid #000;
+        }
+        .hint{
+          font-size: $font-xs;
+          margin-bottom: -1rem;
+        }
+      }
+      .submit {
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        background-color: $button-blue;
+        font-size: $font-md;
+        color: $text-white;
+        font-weight: 600;
+        letter-spacing: 1.2px;
+        border: 1px solid $button-blue;
+        text-transform: uppercase;
+        width: 100%;
+      }
+      .submit:hover {
+        background-color: white;
+        color: $button-blue;
+        font-weight: 700;
+      }
+
+      .forgot-password {
+        width: 100%;
+        text-align: right;
+        font-size: $font-xs;
+        margin-bottom: -1rem;
+
+        a {
+          color: $button-blue;
+          text-decoration: none;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+
+      .signup-cta {
+        font-size: $inputFontSize;
+        text-align: center;
+
+        a {
+          color: $button-blue;
+          font-weight: 500;
+          margin-left: 4px;
+        }
+        p {
+          font-size: $font-sm;
+        }
+      }
+
+      .error {
+        color: red;
+        font-size: 0.75rem;
+        margin-top: 0.3rem;
+      }
+    }
+    .link-btn {
+      background: none;
+      border: none;
+      color: $button-blue;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 0;
+    }
+  }
+}
