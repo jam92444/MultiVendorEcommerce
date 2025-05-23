@@ -35,20 +35,24 @@ const createUser = async (userData) => {
     return null;
   }
 };
-
 const checkUserExists = async (email) => {
   try {
     const res = await fetch(
       `https://66c432c4b026f3cc6cee532c.mockapi.io/users?email=${email}`
     );
     const data = await res.json();
-    return data.length > 0;
+
+    // Ensure data is an array and check if it contains any user
+    if (Array.isArray(data) && data.length > 0) {
+      return true; // User exists
+    }
+
+    return false; // No user found
   } catch (error) {
-    console.error("Check user error:", error);
     return false;
   }
 };
 
 
 export default getUser;
-export {checkUserExists,createUser};
+export { checkUserExists, createUser };

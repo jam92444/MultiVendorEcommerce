@@ -156,7 +156,7 @@ const Login = () => {
             <p>{isLogin ? "Login" : "Create account"}</p>
             <p className="desc">
               {isLogin
-                ? "Login to shop Googies"
+                ? "Login to shop Goodies"
                 : "Signup to be a part of shopping hub"}
             </p>
 

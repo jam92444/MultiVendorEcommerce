@@ -1,0 +1,19 @@
+.form-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1fr; /* default for small screens */
+}
+
+@media (min-width: 1024px) {
+  /* lg screens */
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  /* xl and xxl screens */
+  .form-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

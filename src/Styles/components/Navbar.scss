@@ -1,4 +1,5 @@
-@import "../abstracts/index";
+@use "../abstracts/index" as *;
+
 
 .navbar {
   background: #fff;
@@ -20,7 +21,7 @@
   }
 
   &__logo {
-    font-size: 1.5rem;
+    font-size: $font-xl;
     font-weight: bold;
     color: #333;
     text-decoration: none;
@@ -35,6 +36,7 @@
   &__menu {
     list-style: none;
     display: flex;
+    align-items: center;
     gap: 1.5rem;
 
     li a {
@@ -68,6 +70,7 @@
 
       li {
         padding: 1rem;
+        font-size: $font-sm;
         border-bottom: 1px solid #f0f0f0;
       }
     }
@@ -87,7 +90,7 @@
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  font-size:$font-sm;
+  font-size: $font-sm;
   user-select: none;
   margin-right: 8px;
 }

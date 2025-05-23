@@ -1,0 +1,90 @@
+.edit-form-container {
+  max-width: 100%;
+  margin: 2rem auto;
+  padding: 0 2rem;
+  background-color: white;
+  border-radius: 8px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  h2 {
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+    font-size: 1.8rem;
+    text-align: center;
+  }
+
+  .form-grid {
+    display: grid;
+    gap: 20px;
+
+    @media (min-width: 640px) {
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 1024px) {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    @media (min-width: 1280px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  input {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: 1.5px solid #d1d5db;
+    transition: border-color 0.3s ease;
+
+    &:focus {
+      border-color: #2563eb;
+    }
+  }
+
+  button {
+    margin-top: 30px;
+    padding: 9px 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: white;
+    background-color: #2563eb;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.5);
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #1e40af;
+    }
+
+    &:disabled {
+      background-color: #6b7280;
+      cursor: not-allowed;
+    }
+  }
+
+  .status-message {
+    margin-top: 20px;
+    font-weight: 600;
+    text-align: center;
+
+    &.success {
+      color: #16a34a;
+    }
+
+    &.error {
+      color: #dc2626;
+    }
+  }
+}

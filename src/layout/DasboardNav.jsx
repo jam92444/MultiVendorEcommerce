@@ -1,17 +1,16 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   LogoutOutlined,
   DashboardOutlined,
-  UserOutlined,
-  ShopOutlined,
   UnorderedListOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
 import { Breadcrumb, Layout, Menu, theme, Grid, Button } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AppContext } from "../Context/AppContext";
+import "../Styles/components/_Dashboardnav.scss";
 
 const { Header, Content, Sider } = Layout;
 const { useBreakpoint } = Grid;
@@ -20,48 +19,38 @@ const DashboardNav = ({ children }) => {
   const { user, logout } = useContext(AppContext);
   const screens = useBreakpoint();
   const navigate = useNavigate();
-
+  const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
+  const breadCrumdata = location.pathname.split("/").filter(Boolean);
 
-  React.useEffect(() => {
-    if (!screens.md) {
-      setCollapsed(true);
-    } else {
-      setCollapsed(false);
-    }
+  useEffect(() => {
+    setCollapsed(!screens.md);
   }, [screens.md]);
 
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  const items2 = [
+  const menuItems = [
     {
-      key: "dashboard",
+      key: "/admin/dashboard",
       icon: <DashboardOutlined />,
       label: "Dashboard",
-      children: [
-        { key: "/admin/dashboard/addUser", icon: <PlusOutlined />, label: "Add User" },
-        { key: "/dashboard/orders", icon: <UnorderedListOutlined />, label: "Orders" },
-      ],
     },
     {
-      key: "user",
-      icon: <UserOutlined />,
-      label: "User",
-      children: [
-        { key: "/user/add", icon: <PlusOutlined />, label: "Add User" },
-        { key: "/user/list", icon: <UnorderedListOutlined />, label: "List Users" },
-      ],
+      key: "/admin/dashboard/addUser",
+      icon: <PlusOutlined />,
+      label: "Add User",
     },
     {
-      key: "vendor",
-      icon: <ShopOutlined />,
-      label: "Vendor",
-      children: [
-        { key: "/vendor/add", icon: <PlusOutlined />, label: "Add Vendor" },
-        { key: "/vendor/list", icon: <UnorderedListOutlined />, label: "List Vendors" },
-      ],
+      key: "/admin/dashboard/all-users",
+      icon: <UnorderedListOutlined />,
+      label: "List Users",
+    },
+    {
+      key: "/admin/dashboard/all-vendors",
+      icon: <UnorderedListOutlined />,
+      label: "List Vendors",
     },
   ];
 
@@ -69,10 +58,8 @@ const DashboardNav = ({ children }) => {
     navigate(key);
   };
 
-  const headerMenuItems =
-    user?.role === "admin"
-      ? [{ key: "dashboard", label: "Admin Dashboard" }]
-      : [{ key: "dashboard", label: "Seller Dashboard" }];
+  const headerTitle =
+    user?.role === "admin" ? "Admin Dashboard" : "Seller Dashboard";
 
   const handleLogout = () => {
     logout();
@@ -80,44 +67,19 @@ const DashboardNav = ({ children }) => {
   };
 
   return (
-    <Layout className="container">
-      <Header
-        style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 100,
-          width: "100%",
-          display: "flex",
-          alignItems: "center",
-          padding: "0 16px",
-          background: "#001529",
-          boxShadow: "0 2px 8px #f0f1f2",
-          justifyContent: "space-between",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center" }}>
+    <Layout className="dashboard-layout container">
+      <Header className="dashboard-header">
+        <div className="header-left">
           {!screens.md && (
             <div
+              className="menu-toggle-icon"
               onClick={() => setCollapsed(!collapsed)}
-              style={{
-                fontSize: 18,
-                color: "#fff",
-                cursor: "pointer",
-                marginRight: 16,
-              }}
             >
               {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             </div>
           )}
-          <Menu
-            theme="dark"
-            mode="horizontal"
-            defaultSelectedKeys={["dashboard"]}
-            items={headerMenuItems}
-            style={{ flex: 1, minWidth: 0, fontWeight: 700, fontSize: "1rem" }}
-          />
+          <p className="header-title">{headerTitle}</p>
         </div>
-
         <Button
           type="primary"
           danger
@@ -127,6 +89,7 @@ const DashboardNav = ({ children }) => {
           Logout
         </Button>
       </Header>
+
       <Layout>
         <Sider
           width={200}
@@ -135,34 +98,28 @@ const DashboardNav = ({ children }) => {
           onCollapse={(value) => setCollapsed(value)}
           breakpoint="md"
           collapsedWidth={screens.md ? 80 : 0}
-          style={{
-            position: "sticky",
-            top: 64,
-            height: `calc(100vh - 64px)`,
-            overflowY: "auto",
-            background: colorBgContainer,
-          }}
+          style={{ background: colorBgContainer }}
         >
           <Menu
             mode="inline"
             onClick={onMenuClick}
             style={{ height: "100%", borderRight: 0 }}
-            items={items2}
+            items={menuItems}
           />
         </Sider>
+
         <Layout style={{ padding: "0 24px 24px" }}>
           <Breadcrumb
-            items={[{ title: "Home" }, { title: "App" }]}
-            style={{ margin: "16px 0" }}
+            className="dashboard-breadcrumb"
+            items={breadCrumdata.map((item) => ({
+              title: item.charAt(0).toUpperCase() + item.slice(1),
+            }))}
           />
           <Content
+            className="dashboard-content"
             style={{
-              padding: 24,
-              margin: 0,
-              minHeight: "90vh",
               background: colorBgContainer,
               borderRadius: borderRadiusLG,
-              overflowY: "auto",
             }}
           >
             {children}
@@ -173,4 +130,4 @@ const DashboardNav = ({ children }) => {
   );
 };
 
-export default DashboardNav;
+export default React.memo(DashboardNav);

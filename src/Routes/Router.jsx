@@ -5,6 +5,9 @@ import AdminDashboard from "../Screens/Home/Admin/AdminDashboard";
 import VendorDashboard from "../Screens/Home/Vendor/VendorDashboard";
 import PrivateRoute from "./PrivateROute";
 import AddUser from "../Screens/Home/Admin/AddUser";
+import VendorList from "../Screens/Home/Admin/VendorList";
+import UserList from "../Screens/Home/Admin/UserList";
+import Edit from "../Screens/Home/Admin/Edit";
 
 // Define your routes
 const router = createHashRouter([
@@ -24,7 +27,9 @@ const router = createHashRouter([
     children: [
       { path: "", element: <AdminDashboard /> }, // index route
       { path: "addUser", element: <AddUser /> },
-      // { path: "vendors", element: <VendorManagement /> },
+      { path: "all-users", element: <UserList /> },
+      { path: "all-vendors", element: <VendorList /> },
+      { path:"edit-vendor/:id", element:<Edit />},
       // { path: "orders", element: <AdminOrders /> },
     ],
   },
@@ -54,6 +59,10 @@ const router = createHashRouter([
   //     { path: "/orders/:id", element: <OrderDetails /> },
   //   ],
   // },
+  {
+    path:'*',
+    element: <h1>404 Page Not Found</h1>
+  }
 ]);
 
 export default router;

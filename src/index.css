@@ -1,0 +1,18 @@
+.my-table {
+  border-collapse: separate;
+  border-spacing: 0 12px; /* vertical gap */
+}
+
+* {
+  font-family: "Poppins", sans-serif;
+}
+
+/* ant design modifications */
+.ant-layout-sider-trigger {
+  background-color: rgb(247, 0, 0) !important;
+  color: rgb(254, 254, 254) !important;
+  font-weight: 700 !important;
+}
+.anticon .anticon-left {
+  width: 45px !important;
+}

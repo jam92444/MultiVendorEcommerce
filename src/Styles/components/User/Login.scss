@@ -12,6 +12,8 @@
   &::before {
     content: "";
     position: absolute;
+    min-height: 100vh;
+    padding: 4rem;
     inset: 0;
     background: url("../../../assets/Images/jpeg/bacgroundLogin.jpg")
       no-repeat center center;
@@ -24,7 +26,7 @@
     position: relative;
     z-index: 2; // Make sure form stays above the blurred background
     width: 100%;
-    margin-top: 2rem;
+    margin: 2rem 0  ;
     padding: 1rem;
     .Login-form {
       box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;

@@ -3,6 +3,7 @@
 @use "base/reset" as *;
 @use "base/typography" as *;
 @use "layout/container" as *;
+@use "layout/grid" as *;
 
 body {
   font-family: "Poppins", sans-serif;
@@ -13,9 +14,10 @@ body {
 
 .container {
   width: 100%;
-  max-width: 1440px;
   margin-inline: auto;
   // padding-inline: 16px;
+  max-width: 1980px;
+  font-family: $font-family;
   box-sizing: border-box;
 
   // Static max-widths for common breakpoints
@@ -41,6 +43,14 @@ body {
 
   @media (max-width: 1400px) {
     max-width: 1400px;
+    width: 100%;
+  }
+  @media (max-width: 1536px) {
+    max-width: 1536px;
+    width: 100%;
+  }
+  @media (max-width: 1980px) {
+    max-width: 1980px;
     width: 100%;
   }
 }

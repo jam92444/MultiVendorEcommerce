@@ -3,6 +3,7 @@ import DashboardLayout from "../../../layout/DashboardLayout";
 import { checkUserExists, createUser } from "../../../services/Auth/Login";
 import Input from "../../../Components/UI/Input";
 import "../../../Styles/main.scss";
+import "../../../Styles/layout/_grid.scss"
 
 const AddUser = () => {
   const [type, setType] = useState("user"); // user or vendor
@@ -23,7 +24,6 @@ const AddUser = () => {
     const selectedType = e.target.value;
     setType(selectedType);
 
-    // Reset form and set default role
     setFormData({
       username: "",
       email: "",
@@ -47,7 +47,6 @@ const AddUser = () => {
     setMessage("");
     setLoading(true);
 
-    // Check if user/vendor with email exists
     const exists = await checkUserExists(formData.email);
     if (exists) {
       setMessage("User with this email already exists.");
@@ -55,26 +54,23 @@ const AddUser = () => {
       return;
     }
 
-    // Prepare data to send based on type
-    let dataToSend;
-    if (type === "user") {
-      dataToSend = {
-        username: formData.username,
-        email: formData.email,
-        password: formData.password,
-        role: "user",
-      };
-    } else {
-      dataToSend = {
-        name: formData.name,
-        email: formData.email,
-        shopname: formData.shopname,
-        phone: formData.phone,
-        address: formData.address,
-        password: formData.password,
-        role: "vendor",
-      };
-    }
+    let dataToSend =
+      type === "user"
+        ? {
+            username: formData.username,
+            email: formData.email,
+            password: formData.password,
+            role: "user",
+          }
+        : {
+            name: formData.name,
+            email: formData.email,
+            shopname: formData.shopname,
+            phone: formData.phone,
+            address: formData.address,
+            password: formData.password,
+            role: "vendor",
+          };
 
     const newUser = await createUser(dataToSend);
     if (newUser) {
@@ -92,7 +88,6 @@ const AddUser = () => {
     } else {
       setMessage("Failed to add. Try again.");
     }
-
     setLoading(false);
   };
 
@@ -114,60 +109,167 @@ const AddUser = () => {
   const fieldsToRender = type === "user" ? userFields : vendorFields;
 
   return (
-    <DashboardLayout className="container">
-      <form onSubmit={handleSubmit} style={{ maxWidth: 600, margin: "0 auto" }}>
-        <h2>Add {type === "user" ? "User" : "Vendor"}</h2>
-
-        <label>
-          Select Type:
-          <select value={type} onChange={handleTypeChange} style={{ marginLeft: 10 }}>
-            <option value="user">User</option>
-            <option value="vendor">Vendor</option>
-          </select>
-        </label>
-
-        <br />
-        <br />
-
-        {/* Responsive grid container */}
+    <DashboardLayout>
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          maxWidth: "100%",
+          margin: "2rem auto",
+          padding: "0rem 2rem",
+          backgroundColor: "white",
+          borderRadius: 8,
+          fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+        }}
+      >
+        <h2
+          style={{
+            marginBottom: "1.5rem",
+            fontWeight: 700,
+            color: "#111827",
+            fontSize: "1.8rem",
+            textAlign: "center",
+          }}
+        >
+          Add {type === "user" ? "User" : "Vendor"}
+        </h2>
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "1fr",
+            gridTemplateColumns: "repeat(2,1fr)",
             gap: 20,
           }}
+        >
+          <div>
+            <label
+              htmlFor="type-select"
+              style={{
+                fontWeight: 600,
+                display: "block",
+                marginBottom: 8,
+                color: "#374151",
+              }}
+            >
+              Select Type:
+            </label>
+            <select
+              id="type-select"
+              value={type}
+              onChange={handleTypeChange}
+              style={{
+                width: "100%",
+                padding: "10px 14px",
+                fontSize: "1rem",
+                borderRadius: 6,
+                border: "1.5px solid #d1d5db",
+                marginBottom: 24,
+                cursor: "pointer",
+                backgroundColor: "white",
+                color: "#374151",
+                transition: "border-color 0.3s ease",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#2563eb")}
+              onBlur={(e) => (e.target.style.borderColor = "#d1d5db")}
+            >
+              <option value="user">User</option>
+              <option value="vendor">Vendor</option>
+            </select>
+          </div>
+        </div>
+
+        <div
           className="form-grid"
+         
         >
           {fieldsToRender.map(({ label, name, type: inputType, required }) => (
-            <div key={name} style={{}}>
-              <label style={{ display: "block", marginBottom: 6 }}>{label}:</label>
+            <div key={name}>
+              <label
+                htmlFor={name}
+                style={{
+                  display: "block",
+                  marginBottom: 6,
+                  fontWeight: 600,
+                  color: "#374151",
+                }}
+              >
+                {label}:
+              </label>
               <Input
+                id={name}
                 type={inputType}
                 name={name}
                 value={formData[name]}
                 onChange={handleChange}
                 required={required}
                 placeholder={`Enter ${label.toLowerCase()}`}
-                style={{ width: "100%" }}
+                style={{
+                  width: "100%",
+                  padding: "10px 14px",
+                  fontSize: "1rem",
+                  borderRadius: 6,
+                  border: "1.5px solid #d1d5db",
+                  transition: "border-color 0.3s ease",
+                }}
+                onFocus={(e) => (e.target.style.borderColor = "#2563eb")}
+                onBlur={(e) => (e.target.style.borderColor = "#d1d5db")}
               />
             </div>
           ))}
 
           <div>
-            <label>Role:</label>
+            <label
+              htmlFor="role"
+              style={{
+                display: "block",
+                marginBottom: 6,
+                fontWeight: 600,
+                color: "#374151",
+              }}
+            >
+              Role:
+            </label>
             <Input
+              id="role"
               type="text"
               name="role"
               value={type === "user" ? "user" : "vendor"}
               disabled
-              style={{ width: "100%", background: "#f0f0f0" }}
+              style={{
+                width: "100%",
+                padding: "10px 14px",
+                fontSize: "1rem",
+                borderRadius: 6,
+                border: "1.5px solid #d1d5db",
+                backgroundColor: "#f9fafb",
+                color: "#6b7280",
+              }}
             />
           </div>
         </div>
-
-        <br />
-
-        <button type="submit" disabled={loading} style={{ padding: "0.8rem 1.5rem" }}>
+              {/* submit button */}
+        <button
+          type="submit"
+          disabled={loading}
+          style={{
+            marginTop: 30,
+            width: "fit-content",
+            padding: "9px 20px",
+            fontSize: "0.9rem",
+            fontWeight: 500,
+            color: "white",
+            backgroundColor: loading ? "#6B7280" : "#2563EB",
+            border: "none",
+            borderRadius: 8,
+            cursor: loading ? "not-allowed" : "pointer",
+            boxShadow: "0 4px 12px rgb(37 99 235 / 0.5)",
+            transition: "background-color 0.3s ease",
+          }}
+          onMouseEnter={(e) =>
+            !loading && (e.currentTarget.style.backgroundColor = "#1E40AF")
+          }
+          onMouseLeave={(e) =>
+            !loading && (e.currentTarget.style.backgroundColor = "#2563EB")
+          }
+        >
           {loading ? "Submitting..." : "Submit"}
         </button>
 
@@ -175,14 +277,16 @@ const AddUser = () => {
           <p
             style={{
               marginTop: 20,
-              color: message.includes("success") ? "green" : "red",
+              fontWeight: 600,
+              color: message.includes("success") ? "#16A34A" : "#DC2626",
+              textAlign: "center",
             }}
           >
             {message}
           </p>
         )}
 
-        {/* Add CSS media query for responsiveness */}
+        {/* Responsive grid for wider screens */}
         <style>{`
           @media (min-width: 768px) {
             .form-grid {
