@@ -1,7 +1,6 @@
 @import "../abstracts/index";
 
 .navbar {
-
   background: #fff;
   border-bottom: 1px solid #eee;
   padding: 0.8rem 1.5rem;
@@ -77,4 +76,30 @@
       display: flex;
     }
   }
+}
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size:$font-sm;
+  user-select: none;
+  margin-right: 8px;
+}
+
+.logout-btn {
+  background: transparent;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  font-size: $font-sm;
+  padding: 0;
+}
+.logout-btn:hover {
+  color: #007bff;
 }

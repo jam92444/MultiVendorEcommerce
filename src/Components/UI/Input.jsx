@@ -9,13 +9,13 @@ const Input = ({
   background,
   name,
   color,
-  width,
+  width="100%",
   border,
   outline,
-  padding,
+  padding=".8rem 1rem",
   margin,
   className = "",
-  borderRadius,
+  borderRadius="4px",
   style = {},
   ...rest
 }) => {

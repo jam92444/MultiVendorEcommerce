@@ -1,8 +1,10 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "../../Styles/components/User/Login.scss";
 import Input from "../../Components/UI/Input";
 import Button from "../../Components/UI/Button";
 import UserLayout from "../../layout/UserLayout";
+import { useNavigate } from "react-router-dom";
+import getUser, { createUser } from "../../services/Auth/Login";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -13,8 +15,7 @@ const Login = () => {
     confirmPassword: "",
   });
   const [errors, setErrors] = useState({});
-
-  // Input refs for Enter-to-next focus
+  const navigate = useNavigate();
   const nameRef = useRef(null);
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
@@ -31,6 +32,7 @@ const Login = () => {
     setErrors({});
   };
 
+  // Email and password validation
   const validate = () => {
     const newErrors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -63,16 +65,57 @@ const Login = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // handling changes
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
 
-    console.log(isLogin ? "Login data" : "Signup data", formData);
-    // Handle API call or login/signup logic
+    if (isLogin) {
+      // Login flow
+      const user = await getUser(formData.email, formData.password);
+      if (!user) {
+        setErrors("Invalid email or password");
+        return;
+      }
+      localStorage.setItem("user", JSON.stringify(user));
+      switch (user.role) {
+        case "admin":
+          navigate("/admin/dashboard");
+          break;
+        case "vendor":
+          navigate("/vendor/dashboard");
+          break;
+        default:
+          navigate("/");
+          break;
+      }
+    } else {
+      // Signup flow
+      const newUser = {
+        username: formData.name,
+        email: formData.email,
+        password: formData.password,
+        role: "user",
+      };
+
+      const createdUser = await createUser(newUser);
+
+      if (!createdUser) {
+        setErrors("Signup failed. Please try again.");
+        return;
+      }
+
+      localStorage.setItem("user", JSON.stringify(createdUser));
+
+      navigate("/");
+
+      setFormData({ name: "", email: "", password: "", confirmPassword: "" });
+      setErrors({});
+    }
   };
 
   // Handle Enter key to jump to next field
@@ -82,6 +125,28 @@ const Login = () => {
       nextRef.current.focus();
     }
   };
+
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+
+      // Redirect based on user role
+      switch (user.role) {
+        case "admin":
+          navigate("/admin/dashboard");
+          break;
+        case "vendor":
+          navigate("/vendor/dashboard");
+          break;
+        default:
+          navigate("/");
+          break;
+      }
+    }
+  }, [navigate]);
+
 
   return (
     <UserLayout className="container">
@@ -186,7 +251,7 @@ const Login = () => {
               </p>
             </div>
           </form>
-        </div>{" "}
+        </div>
       </div>
     </UserLayout>
   );
