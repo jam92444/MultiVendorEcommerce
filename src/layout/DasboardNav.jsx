@@ -47,16 +47,22 @@ const menuItems =
           icon: <PlusOutlined />,
           label: "Add User",
         },
+          {
+          key: "/admin/dashboard/all-products",
+          icon: <ProductFilled />,
+          label: "Products",
+        },  
         {
           key: "/admin/dashboard/all-users",
           icon: <UnorderedListOutlined />,
-          label: "List Users",
+          label: "Users",
         },
         {
           key: "/admin/dashboard/all-vendors",
           icon: <UnorderedListOutlined />,
-          label: "List Vendors",
+          label: "Vendors",
         },
+      
       ]
     : [
         {
@@ -71,12 +77,12 @@ const menuItems =
           children: [
             {
               key: "/vendor/dashboard/add-products",
-              icon: <ProductFilled />,
+              icon: <PlusOutlined />,
               label: "Add Product",
             },
             {
               key: "/vendor/dashboard/all-products",
-              icon: <PlusOutlined />,
+              icon: <ProductFilled />,
               label: "All Product",
             },
           ],

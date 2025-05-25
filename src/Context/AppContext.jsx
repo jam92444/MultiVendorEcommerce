@@ -1,12 +1,12 @@
 import { createContext, useEffect, useState } from "react";
-import { getAllUsers } from "../services/admin/allUser"; // adjust path if needed
+import { getAllUsers } from "../services/admin/allUser";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export const AppContext = createContext();
 
 const AppContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [allUser, setAllUser] = useState([]);
-
+  const [allUser, setAllUser] = useState([]); 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -14,10 +14,31 @@ const AppContextProvider = ({ children }) => {
     }
   }, []);
 
+useEffect(() => {
+  if (!user) return;
+
+  const routeMap = {
+    admin: "#/admin/dashboard",
+    vendor: "#/vendor/dashboard",
+    user: "#/"
+  };
+
+  const targetPath = routeMap[user.role] || "/";
+  if (window.location.pathname !== targetPath) {
+    window.location.href = targetPath; // full page reload
+  }
+}, [user]);
+
+
+
   useEffect(() => {
     const fetchUsers = async () => {
-      const data = await getAllUsers();
-      setAllUser(data);
+      try {
+        const data = await getAllUsers();
+        setAllUser(data);
+      } catch (error) {
+        console.error("Failed to fetch users:", error);
+      }
     };
 
     fetchUsers();
@@ -33,7 +54,7 @@ const AppContextProvider = ({ children }) => {
     setUser,
     logout,
     allUser,
-    setAllUser, // include this if you want to update it elsewhere
+    setAllUser,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

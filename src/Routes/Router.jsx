@@ -34,6 +34,7 @@ const router = createHashRouter([
       { path: "all-users", element: <UserList /> },
       { path: "all-vendors", element: <VendorList /> },
       { path:"edit-vendor/:id", element:<Edit />},
+      { path:"all-products", element:<AllProducts />},
       // { path: "orders", element: <AdminOrders /> },
     ],
   },

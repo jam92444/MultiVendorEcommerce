@@ -92,7 +92,6 @@
       // .removebutton{
       //   font-size: $font-3xl;
       // }
-
     }
   }
 
@@ -115,3 +114,22 @@
   }
 }
 
+.add-product__submit {
+  transition: background-color 0.3s ease, transform 0.3s ease, color 0.3s ease;
+  background-color: #1976d2; // default blue
+  color: white;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.add-product__submit.added {
+  background-color: #4caf50; // green for added
+  color: #fff;
+}
+
+.add-product__submit.animate {
+  transform: scale(1.05);
+}
