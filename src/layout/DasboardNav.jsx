@@ -6,11 +6,15 @@ import {
   DashboardOutlined,
   UnorderedListOutlined,
   PlusOutlined,
+  ProductFilled,
+  OrderedListOutlined,
+  BoxPlotOutlined,
 } from "@ant-design/icons";
 import { Breadcrumb, Layout, Menu, theme, Grid, Button } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AppContext } from "../Context/AppContext";
 import "../Styles/components/_Dashboardnav.scss";
+import { GrOrderedList } from "react-icons/gr";
 
 const { Header, Content, Sider } = Layout;
 const { useBreakpoint } = Grid;
@@ -30,29 +34,72 @@ const DashboardNav = ({ children }) => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+const menuItems =
+  user?.role === "admin"
+    ? [
+        {
+          key: "/admin/dashboard",
+          icon: <DashboardOutlined />,
+          label: "Dashboard",
+        },
+        {
+          key: "/admin/dashboard/addUser",
+          icon: <PlusOutlined />,
+          label: "Add User",
+        },
+        {
+          key: "/admin/dashboard/all-users",
+          icon: <UnorderedListOutlined />,
+          label: "List Users",
+        },
+        {
+          key: "/admin/dashboard/all-vendors",
+          icon: <UnorderedListOutlined />,
+          label: "List Vendors",
+        },
+      ]
+    : [
+        {
+          key: "/vendor/dashboard",
+          icon: <DashboardOutlined />,
+          label: "Dashboard",
+        },
+        {
+          key: "/vendor/dashboard/products",
+          icon: <ProductFilled />,
+          label: "Product",
+          children: [
+            {
+              key: "/vendor/dashboard/add-products",
+              icon: <ProductFilled />,
+              label: "Add Product",
+            },
+            {
+              key: "/vendor/dashboard/all-products",
+              icon: <PlusOutlined />,
+              label: "All Product",
+            },
+          ],
+        },
+        {
+          key: "/vendor/dashboard/orders",
+          icon: <OrderedListOutlined />,
+          label: "Orders",
+          children: [
+            {
+              key: "/vendor/dashboard/all-orders",
+              icon: <GrOrderedList />,
+              label: "All Orders",
+            },
+            {
+              key: "/vendor/dashboard/new-orders",
+              icon: <BoxPlotOutlined />,
+              label: "New Orders",
+            },
+          ],
+        },
+      ];
 
-  const menuItems = [
-    {
-      key: "/admin/dashboard",
-      icon: <DashboardOutlined />,
-      label: "Dashboard",
-    },
-    {
-      key: "/admin/dashboard/addUser",
-      icon: <PlusOutlined />,
-      label: "Add User",
-    },
-    {
-      key: "/admin/dashboard/all-users",
-      icon: <UnorderedListOutlined />,
-      label: "List Users",
-    },
-    {
-      key: "/admin/dashboard/all-vendors",
-      icon: <UnorderedListOutlined />,
-      label: "List Vendors",
-    },
-  ];
 
   const onMenuClick = ({ key }) => {
     navigate(key);

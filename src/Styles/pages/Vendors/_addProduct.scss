@@ -1,0 +1,117 @@
+@use "../../abstracts/index" as *;
+
+.add-product {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem 2rem;
+  background: #fff;
+  border-radius: 8px;
+  font-family: $font-family;
+
+  &__title {
+    font-size: $font-2xl;
+    margin-bottom: 1.5rem;
+    font-weight: $font-bold;
+    text-align: start;
+  }
+
+  // Responsive grid container for inputs
+  &__fields-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+
+    // On small screens, stack fields
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+    label {
+      font-weight: $font-semibold;
+      margin-bottom: 0.5rem;
+      font-size: $font-md;
+    }
+
+    input,
+    textarea {
+      font-size: $inputFontSize;
+      padding: 0.8rem 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-family: $font-family;
+      resize: vertical;
+
+      &:focus {
+        outline: none;
+        border-color: $primary-color;
+        box-shadow: 0 0 5px rgba($primary-color, 0.5);
+      }
+    }
+
+    textarea {
+      font-family: $font-family;
+    }
+  }
+
+  &__images {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+
+    button {
+      margin-right: 1rem;
+      margin-bottom: 1rem;
+      width: fit-content;
+    }
+
+    &__preview-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 1rem;
+
+      @media (max-width: 480px) {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      }
+    }
+
+    &__preview {
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+
+      img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+      }
+      // .removebutton{
+      //   font-size: $font-3xl;
+      // }
+
+    }
+  }
+
+  &__textarea {
+    min-height: 100px;
+  }
+
+  &__submit {
+    display: block;
+    margin-top: 2rem;
+    background: $button-blue;
+    color: $text-white;
+    font-size: $font-lg;
+    font-weight: $font-semibold;
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+}
+

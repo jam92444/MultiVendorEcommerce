@@ -9,7 +9,7 @@ const Button = ({
   width,
   border,
   outline,
-  padding,
+  padding=".5rem 1rem",
   margin,
   borderRadius,
   className = "",

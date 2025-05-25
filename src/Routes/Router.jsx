@@ -3,11 +3,15 @@ import Home from "../Screens/Home";
 import Login from "../Screens/Auth/Login";
 import AdminDashboard from "../Screens/Home/Admin/AdminDashboard";
 import VendorDashboard from "../Screens/Home/Vendor/VendorDashboard";
-import PrivateRoute from "./PrivateROute";
+import PrivateRoute from "./PrivateRoute";
 import AddUser from "../Screens/Home/Admin/AddUser";
 import VendorList from "../Screens/Home/Admin/VendorList";
 import UserList from "../Screens/Home/Admin/UserList";
 import Edit from "../Screens/Home/Admin/Edit";
+import AddProduct from "../Screens/Home/Vendor/AddProduct";
+import AllOrders from "../Screens/Home/Vendor/AllOrders";
+import NewOrders from "../Screens/Home/Vendor/NewOrders";
+import AllProducts from "../Screens/Home/Vendor/AllProducts";
 
 // Define your routes
 const router = createHashRouter([
@@ -39,11 +43,13 @@ const router = createHashRouter([
     path: "/vendor/dashboard",
     element: <PrivateRoute allowedRoles={["vendor"]} />,
     children: [
-      { path: "/vendor/dashboard", element: <VendorDashboard /> },
-      // { path: "/vendor/products", element: <VendorProducts /> },
-      // { path: "/vendor/products/add", element: <AddProduct /> },
-      // { path: "/vendor/products/edit/:id", element: <EditProduct /> },
-      // { path: "/vendor/orders", element: <VendorOrders /> },
+      { path: "", element: <VendorDashboard /> },
+      { path: "add-products", element: <AddProduct /> },
+      { path: "all-products", element: <AllProducts /> },
+      { path: "all-orders", element: <AllOrders /> },
+      { path: "new-orders", element: <NewOrders /> },
+      
+      
     ],
   },
 
