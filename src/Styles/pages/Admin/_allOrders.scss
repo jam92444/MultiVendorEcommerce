@@ -1,0 +1,105 @@
+@use "../../abstracts/index" as *;
+
+.orders-page{
+    margin-top: -5rem !important;
+}
+.admin-order {
+  border: 1px solid #ccc;
+  margin-bottom: 2rem;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+
+
+  &:hover {
+    transform: scale(1.01);
+  }
+
+  .order-header,
+  .order-customer,
+  .order-products,
+  .vendor-section {
+    margin-bottom: 1rem;
+  }
+  .order-header{
+    @include flex-center;
+    gap:1rem;
+  }
+
+  h4 {
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+
+  p {
+    margin: 0.25rem 0;
+    font-size: 0.95rem;
+  }
+
+  .approved {
+    color: #28a745;
+    font-weight: bold;
+  }
+
+  .pending {
+    color: #fd7e14;
+    font-weight: bold;
+  }
+
+  .vendor-id {
+    display: inline-block;
+    background: #eef1f5;
+    padding: 0.4rem 0.75rem;
+    margin: 0.25rem 0.5rem 0 0;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    color: #444;
+  }
+
+  .admin-product-item {
+    background: #f8f9fa;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    border-left: 4px solid #007bff;
+    border-radius: 4px;
+  }
+}
+
+.orders-page {
+  padding: 1rem;
+
+  .title {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: #222;
+    font-weight: 600;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-order {
+    padding: 1rem;
+
+    .vendor-id,
+    .admin-product-item {
+      font-size: 0.9rem;
+    }
+  }
+
+  .orders-page {
+    padding: 0.5rem;
+
+    .title {
+      font-size: 1.4rem;
+    }
+  }
+}
+.orders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
+  gap: 1.5rem;
+}
+.title{
+    margin-top: 0;
+}

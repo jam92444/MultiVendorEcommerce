@@ -9,7 +9,6 @@ import VendorList from "../Screens/Home/Admin/VendorList";
 import UserList from "../Screens/Home/Admin/UserList";
 import Edit from "../Screens/Home/Admin/Edit";
 import AddProduct from "../Screens/Home/Vendor/AddProduct";
-import AllOrders from "../Screens/Home/Vendor/AllOrders";
 import NewOrders from "../Screens/Home/Vendor/NewOrders";
 import AllProducts from "../Screens/Home/Vendor/AllProducts";
 import Product from "../Screens/Home/User/Product";
@@ -19,6 +18,9 @@ import OrderConfirmation from "../Components/OrderConfirmation";
 import CheckOut from "../Components/ProceedToOrder";
 import PaymentPage from "../Screens/Home/User/PaymentPage";
 import OrdersPage from "../Screens/Home/User/OrdersPage";
+import AllOrders from "../Screens/Home/Admin/AllOrders";
+import VendorOrders from "../Screens/Home/Vendor/VendorOrders";
+
 // Define your routes
 const router = createHashRouter([
   // Public Routes
@@ -36,9 +38,9 @@ const router = createHashRouter([
       { path: "addUser", element: <AddUser /> },
       { path: "all-users", element: <UserList /> },
       { path: "all-vendors", element: <VendorList /> },
-      { path:"edit-vendor/:id", element:<Edit />},
-      { path:"all-products", element:<AllProducts />},
-      // { path: "orders", element: <AdminOrders /> },
+      { path: "edit-vendor/:id", element: <Edit /> },
+      { path: "all-products", element: <AllProducts /> },
+      { path: "all-orders", element: <AllOrders /> },
     ],
   },
 
@@ -50,10 +52,8 @@ const router = createHashRouter([
       { path: "", element: <VendorDashboard /> },
       { path: "add-products", element: <AddProduct /> },
       { path: "all-products", element: <AllProducts /> },
-      { path: "all-orders", element: <AllOrders /> },
-      { path: "new-orders", element: <NewOrders /> },
-      
-      
+      { path: "all-orders", element: <VendorOrders /> },
+      // { path: "new-orders", element: <NewOrders /> },
     ],
   },
 
@@ -72,9 +72,9 @@ const router = createHashRouter([
     ],
   },
   {
-    path:'*',
-    element: <h1>404 Page Not Found</h1>
-  }
+    path: "*",
+    element: <h1>404 Page Not Found</h1>,
+  },
 ]);
 
 export default router;

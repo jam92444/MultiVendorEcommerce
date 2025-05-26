@@ -62,6 +62,11 @@ const DashboardNav = ({ children }) => {
             icon: <UnorderedListOutlined />,
             label: "Vendors",
           },
+          {
+            key: "/admin/dashboard/all-orders",
+            icon: <OrderedListOutlined />,
+            label: "Orders",
+          },
         ]
       : [
           {
@@ -87,21 +92,10 @@ const DashboardNav = ({ children }) => {
             ],
           },
           {
-            key: "/vendor/dashboard/orders",
+            key: "/vendor/dashboard/all-orders",
             icon: <OrderedListOutlined />,
             label: "Orders",
-            children: [
-              {
-                key: "/vendor/dashboard/all-orders",
-                icon: <GrOrderedList />,
-                label: "All Orders",
-              },
-              {
-                key: "/vendor/dashboard/new-orders",
-                icon: <BoxPlotOutlined />,
-                label: "New Orders",
-              },
-            ],
+          
           },
         ];
 
