@@ -9,17 +9,15 @@ import { approveProduct, rejectProduct } from "../../../services/admin/product";
 const AllProducts = () => {
   const [products, setProducts] = useState([]);
   const [users, setUsers] = useState({});
-  const [showModal, setShowModal] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  // Approval modal state
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [selectedApproveProductId, setSelectedApproveProductId] =
     useState(null);
   const [approving, setApproving] = useState(false);
 
-  // Reject modal state
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [selectedRejectProductId, setSelectedRejectProductId] = useState(null);
   const [rejecting, setRejecting] = useState(false);
@@ -36,26 +34,20 @@ const AllProducts = () => {
         return;
       }
 
-      let filteredProducts = productData;
+      const filtered = isVendor
+        ? productData.filter((p) => p.vendorId === currentUser.id)
+        : productData;
 
-      if (isVendor) {
-        filteredProducts = productData.filter(
-          (p) => p.vendorId === currentUser.id
-        );
-      }
-
-      setProducts(filteredProducts);
+      setProducts(filtered);
 
       if (isAdmin) {
         const userData = await getAllUsers();
         if (Array.isArray(userData)) {
-          const userMap = {};
+          const map = {};
           userData.forEach((user) => {
-            userMap[user.id] = user.name;
+            map[user.id] = user.name;
           });
-          setUsers(userMap);
-        } else {
-          console.error("Invalid user data:", userData);
+          setUsers(map);
         }
       }
     };
@@ -63,36 +55,45 @@ const AllProducts = () => {
     fetchData();
   }, [isAdmin, isVendor, currentUser?.id]);
 
+  const formatDateTime = (isoDate) =>
+    new Date(isoDate).toLocaleString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+
   const handleEdit = (id) => {
     console.log("Edit product with ID:", id);
+    // Navigate or show form here
   };
 
-  // Delete modal handlers
+  // Delete
   const openDeleteModal = (id) => {
     setSelectedProductId(id);
     setShowModal(true);
   };
   const closeModal = () => {
-    setSelectedProductId(null);
     setShowModal(false);
+    setSelectedProductId(null);
   };
   const confirmDelete = async () => {
     setDeleting(true);
     try {
       await deleteProduct(selectedProductId);
-      setProducts((prev) =>
-        prev.filter((product) => product.id !== selectedProductId)
-      );
+      setProducts((prev) => prev.filter((p) => p.id !== selectedProductId));
       closeModal();
-    } catch (error) {
-      console.error("Delete failed:", error);
-      alert("Failed to delete the product. Please try again.");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete product.");
     } finally {
       setDeleting(false);
     }
   };
 
-  // Approval modal handlers
+  // Approve
   const openApproveModal = (id) => {
     setSelectedApproveProductId(id);
     setShowApproveModal(true);
@@ -101,39 +102,24 @@ const AllProducts = () => {
     setSelectedApproveProductId(null);
     setShowApproveModal(false);
   };
-
   const confirmApprove = async () => {
     setApproving(true);
     try {
-      const productToUpdate = products.find(
-        (p) => p.id === selectedApproveProductId
-      );
-      if (!productToUpdate) {
-        throw new Error("Product not found");
-      }
-
-      // Send updated product with `approved: true`
-      await approveProduct(selectedApproveProductId, {
-        ...productToUpdate,
-        approved: true,
-      });
-
-      // Update UI
+      const product = products.find((p) => p.id === selectedApproveProductId);
+      await approveProduct(product.id, { ...product, approved: true });
       setProducts((prev) =>
-        prev.map((p) =>
-          p.id === selectedApproveProductId ? { ...p, approved: true } : p
-        )
+        prev.map((p) => (p.id === product.id ? { ...p, approved: true } : p))
       );
       closeApproveModal();
-    } catch (error) {
-      console.error("Approval failed:", error);
-      alert("Failed to approve the product. Please try again.");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to approve product.");
     } finally {
       setApproving(false);
     }
   };
 
-  // Reject modal handlers (NEW)
+  // Reject
   const openRejectModal = (id) => {
     setSelectedRejectProductId(id);
     setShowRejectModal(true);
@@ -147,26 +133,15 @@ const AllProducts = () => {
     try {
       await rejectProduct(selectedRejectProductId);
       setProducts((prev) =>
-        prev.filter((product) => product.id !== selectedRejectProductId)
+        prev.filter((p) => p.id !== selectedRejectProductId)
       );
       closeRejectModal();
-    } catch (error) {
-      console.error("Rejection failed:", error);
-      alert("Failed to reject the product. Please try again.");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to reject product.");
     } finally {
       setRejecting(false);
     }
-  };
-
-  const formatDateTime = (isoDate) => {
-    return new Date(isoDate).toLocaleString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
   };
 
   return (
@@ -182,159 +157,119 @@ const AllProducts = () => {
           <span>Created At</span>
           <span>Actions</span>
         </div>
-        {products.map((product) => {
-          const showProduct = isAdmin || product.approved;
-          if (!showProduct) return null;
 
-          return (
-            <div key={product.id} className="all-products__row">
-              <div className="all-products__image">
-                <img src={product.images?.[0]} alt={product.name} />
-              </div>
-              <span>{product.name}</span>
-              <span>${product.price}</span>
-              {isAdmin && (
-                <span>
-                  {users[product.vendorId || product.userId] || "Loading..."}
-                </span>
+        {products.map((product) => (
+          <div key={product.id} className="all-products__row">
+            <div className="all-products__image">
+              <img src={product.images?.[0]} alt={product.name} />
+            </div>
+            <span>{product.name}</span>
+            <span>${product.price}</span>
+            {isAdmin && (
+              <span>{users[product.vendorId || product.userId] || "..."}</span>
+            )}
+            <span>
+              {product.approved ? (
+                <span className="status-approved">Approved</span>
+              ) : (
+                <span className="status-pending">Pending</span>
+              )}
+            </span>
+            <span>{formatDateTime(product.createdAt)}</span>
+            <div className="all-products__actions">
+              {isAdmin && !product.approved && (
+                <>
+                  <Button
+                    onClick={() => openApproveModal(product.id)}
+                    background="#4caf50"
+                    color="#fff"
+                  >
+                    Approve
+                  </Button>
+                  <Button
+                    onClick={() => openRejectModal(product.id)}
+                    background="#f44336"
+                    color="#fff"
+                  >
+                    Reject
+                  </Button>
+                </>
               )}
 
-              <span>
-                {product.approved ? (
-                  <span className="status-approved">Approved</span>
-                ) : (
-                  <span className="status-pending">Pending Approval</span>
-                )}
-              </span>
+              {isVendor && product.vendorId === currentUser.id && (
+                <>
+                  <Button
+                    onClick={() => handleEdit(product.id)}
+                    background="#2196f3"
+                    color="#fff"
+                  >
+                    Edit
+                  </Button>
 
-              <span>{formatDateTime(product.createdAt)}</span>
-
-              <div className="all-products__actions">
-                {isAdmin && !product.approved && (
-                  <>
-                    <Button
-                      onClick={() => openApproveModal(product.id)}
-                      background="#4caf50"
-                      color="#fff"
-                    >
-                      Approve
-                    </Button>
-                    <Button
-                      onClick={() => openRejectModal(product.id)} // open reject modal now
-                      background="#f44336"
-                      color="#fff"
-                    >
-                      Reject
-                    </Button>
-                  </>
-                )}
-                {isVendor && (
-                  <>
-                    <Button
-                      className="btn-edit"
-                      onClick={() => handleEdit(product.id)}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      className="btn-remove"
-                      onClick={() => openDeleteModal(product.id)}
-                    >
-                      Remove
-                    </Button>
-                  </>
-                )}
-              </div>
+                  <Button
+                    onClick={() => openDeleteModal(product.id)}
+                    background="#f44336"
+                    color="#fff"
+                  >
+                    Remove
+                  </Button>
+                </>
+              )}
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
 
-      {/* Delete Confirmation Modal */}
+      {/* Modals */}
       {showModal && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h4>Confirm Deletion</h4>
-            <p>Are you sure you want to delete this product?</p>
-            <div className="modal__actions">
-              <Button
-                onClick={confirmDelete}
-                background="#f44336"
-                color="#fff"
-                disabled={deleting}
-              >
-                {deleting ? "Deleting..." : "Yes, Delete"}
-              </Button>
-              <Button
-                onClick={closeModal}
-                background="#ccc"
-                color="#000"
-                disabled={deleting}
-              >
-                Cancel
-              </Button>
-            </div>
-          </div>
-        </div>
+        <Modal
+          title="Confirm Deletion"
+          message="Are you sure you want to delete this product?"
+          onConfirm={confirmDelete}
+          onCancel={closeModal}
+          confirmText={deleting ? "Deleting..." : "Yes, Delete"}
+        />
       )}
 
-      {/* Approve Confirmation Modal */}
       {showApproveModal && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h4>Confirm Approval</h4>
-            <p>Are you sure you want to approve this product?</p>
-            <div className="modal__actions">
-              <Button
-                onClick={confirmApprove}
-                background="#4caf50"
-                color="#fff"
-                disabled={approving}
-              >
-                {approving ? "Approving..." : "Yes, Approve"}
-              </Button>
-              <Button
-                onClick={closeApproveModal}
-                background="#ccc"
-                color="#000"
-                disabled={approving}
-              >
-                Cancel
-              </Button>
-            </div>
-          </div>
-        </div>
+        <Modal
+          title="Confirm Approval"
+          message="Are you sure you want to approve this product?"
+          onConfirm={confirmApprove}
+          onCancel={closeApproveModal}
+          confirmText={approving ? "Approving..." : "Yes, Approve"}
+        />
       )}
 
-      {/* Reject Confirmation Modal */}
       {showRejectModal && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h4>Confirm Rejection</h4>
-            <p>Are you sure you want to reject this product?</p>
-            <div className="modal__actions">
-              <Button
-                onClick={confirmReject}
-                background="#f44336"
-                color="#fff"
-                disabled={rejecting}
-              >
-                {rejecting ? "Rejecting..." : "Yes, Reject"}
-              </Button>
-              <Button
-                onClick={closeRejectModal}
-                background="#ccc"
-                color="#000"
-                disabled={rejecting}
-              >
-                Cancel
-              </Button>
-            </div>
-          </div>
-        </div>
+        <Modal
+          title="Confirm Rejection"
+          message="Are you sure you want to reject this product?"
+          onConfirm={confirmReject}
+          onCancel={closeRejectModal}
+          confirmText={rejecting ? "Rejecting..." : "Yes, Reject"}
+        />
       )}
     </DashboardLayout>
   );
 };
+
+// Reusable Modal Component
+const Modal = ({ title, message, onConfirm, onCancel, confirmText }) => (
+  <div className="modal-overlay">
+    <div className="modal">
+      <h4>{title}</h4>
+      <p>{message}</p>
+      <div className="modal__actions">
+        <Button onClick={onConfirm} background="#4caf50" color="#fff">
+          {confirmText}
+        </Button>
+        <Button onClick={onCancel} background="#ccc" color="#000">
+          Cancel
+        </Button>
+      </div>
+    </div>
+  </div>
+);
 
 export default AllProducts;

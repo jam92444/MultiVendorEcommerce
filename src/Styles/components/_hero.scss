@@ -1,0 +1,131 @@
+/* components/Hero/Hero.module.scss */
+
+.heroWrapper {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #d1d5db;
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+  }
+}
+
+.left {
+  width: 100%;
+  padding: 32px 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media (min-width: 640px) {
+    width: 50%;
+    padding: 0;
+  }
+}
+
+.content {
+  color: #414141;
+  max-width: 500px;
+  text-align: center;
+
+  @media (min-width: 640px) {
+    text-align: left;
+  }
+}
+
+.bestseller {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+
+  @media (min-width: 640px) {
+    justify-content: flex-start;
+  }
+
+  .line {
+    width: 32px;
+    height: 2px;
+    background-color: #414141;
+
+    @media (min-width: 768px) {
+      width: 44px;
+    }
+  }
+
+  .label {
+    font-size: 0.875rem;
+    font-weight: 500;
+
+    @media (min-width: 768px) {
+      font-size: 1rem;
+    }
+  }
+}
+
+.title {
+  font-family: 'Prata', serif;
+  font-size: 2rem;
+  line-height: 1.4;
+  margin: 16px 0;
+
+  @media (min-width: 768px) {
+    font-size: 2.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    font-size: 3rem;
+  }
+}
+
+.shopNow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+
+  @media (min-width: 640px) {
+    justify-content: flex-start;
+  }
+
+  .shopText {
+    font-weight: 600;
+    font-size: 0.875rem;
+
+    @media (min-width: 768px) {
+      font-size: 1rem;
+    }
+  }
+
+  .line {
+    width: 32px;
+    height: 2px;
+    background-color: #414141;
+
+    @media (min-width: 768px) {
+      width: 44px;
+    }
+  }
+}
+
+.right {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @media (min-width: 640px) {
+    width: 50%;
+  }
+
+  .heroImage {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+    object-fit: contain;
+
+    @media (min-width: 768px) {
+      max-height: none;
+    }
+  }
+}

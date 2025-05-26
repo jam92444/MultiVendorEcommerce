@@ -19,6 +19,8 @@ body {
   max-width: 1980px;
   font-family: $font-family;
   box-sizing: border-box;
+  min-height: 50vh;
+  margin-top: 4rem;
 
   // Static max-widths for common breakpoints
   @media (max-width: 576px) {

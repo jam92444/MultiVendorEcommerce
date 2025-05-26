@@ -34,78 +34,76 @@ const DashboardNav = ({ children }) => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-const menuItems =
-  user?.role === "admin"
-    ? [
-        {
-          key: "/admin/dashboard",
-          icon: <DashboardOutlined />,
-          label: "Dashboard",
-        },
-        {
-          key: "/admin/dashboard/addUser",
-          icon: <PlusOutlined />,
-          label: "Add User",
-        },
+  const menuItems =
+    user?.role === "admin"
+      ? [
           {
-          key: "/admin/dashboard/all-products",
-          icon: <ProductFilled />,
-          label: "Products",
-        },  
-        {
-          key: "/admin/dashboard/all-users",
-          icon: <UnorderedListOutlined />,
-          label: "Users",
-        },
-        {
-          key: "/admin/dashboard/all-vendors",
-          icon: <UnorderedListOutlined />,
-          label: "Vendors",
-        },
-      
-      ]
-    : [
-        {
-          key: "/vendor/dashboard",
-          icon: <DashboardOutlined />,
-          label: "Dashboard",
-        },
-        {
-          key: "/vendor/dashboard/products",
-          icon: <ProductFilled />,
-          label: "Product",
-          children: [
-            {
-              key: "/vendor/dashboard/add-products",
-              icon: <PlusOutlined />,
-              label: "Add Product",
-            },
-            {
-              key: "/vendor/dashboard/all-products",
-              icon: <ProductFilled />,
-              label: "All Product",
-            },
-          ],
-        },
-        {
-          key: "/vendor/dashboard/orders",
-          icon: <OrderedListOutlined />,
-          label: "Orders",
-          children: [
-            {
-              key: "/vendor/dashboard/all-orders",
-              icon: <GrOrderedList />,
-              label: "All Orders",
-            },
-            {
-              key: "/vendor/dashboard/new-orders",
-              icon: <BoxPlotOutlined />,
-              label: "New Orders",
-            },
-          ],
-        },
-      ];
-
+            key: "/admin/dashboard",
+            icon: <DashboardOutlined />,
+            label: "Dashboard",
+          },
+          {
+            key: "/admin/dashboard/addUser",
+            icon: <PlusOutlined />,
+            label: "Add User",
+          },
+          {
+            key: "/admin/dashboard/all-products",
+            icon: <ProductFilled />,
+            label: "Products",
+          },
+          {
+            key: "/admin/dashboard/all-users",
+            icon: <UnorderedListOutlined />,
+            label: "Users",
+          },
+          {
+            key: "/admin/dashboard/all-vendors",
+            icon: <UnorderedListOutlined />,
+            label: "Vendors",
+          },
+        ]
+      : [
+          {
+            key: "/vendor/dashboard",
+            icon: <DashboardOutlined />,
+            label: "Dashboard",
+          },
+          {
+            key: "/vendor/dashboard/products",
+            icon: <ProductFilled />,
+            label: "Product",
+            children: [
+              {
+                key: "/vendor/dashboard/add-products",
+                icon: <PlusOutlined />,
+                label: "Add Product",
+              },
+              {
+                key: "/vendor/dashboard/all-products",
+                icon: <ProductFilled />,
+                label: "All Product",
+              },
+            ],
+          },
+          {
+            key: "/vendor/dashboard/orders",
+            icon: <OrderedListOutlined />,
+            label: "Orders",
+            children: [
+              {
+                key: "/vendor/dashboard/all-orders",
+                icon: <GrOrderedList />,
+                label: "All Orders",
+              },
+              {
+                key: "/vendor/dashboard/new-orders",
+                icon: <BoxPlotOutlined />,
+                label: "New Orders",
+              },
+            ],
+          },
+        ];
 
   const onMenuClick = ({ key }) => {
     navigate(key);
@@ -118,6 +116,7 @@ const menuItems =
     logout();
     navigate("/login");
   };
+
 
   return (
     <Layout className="dashboard-layout container">
@@ -183,4 +182,4 @@ const menuItems =
   );
 };
 
-export default React.memo(DashboardNav);
+export default DashboardNav;

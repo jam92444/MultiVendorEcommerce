@@ -1,0 +1,71 @@
+.payment-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: "Poppins", sans-serif;
+
+  .payment-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .payment-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+    }
+  }
+
+  .shipping-info,
+  .payment-summary {
+    flex: 1;
+    background-color: #f9fafb;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+
+    h2 {
+      margin-bottom: 1rem;
+      font-size: 1.25rem;
+      color: #111827;
+    }
+
+    p {
+      margin: 0.25rem 0;
+      color: #374151;
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      margin: 0.5rem 0;
+    }
+
+    .summary-total {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+    }
+
+    .pay-now-btn {
+      margin-top: 2rem;
+      width: 100%;
+      padding: 0.75rem;
+      background-color: #10b981;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #059669;
+      }
+    }
+  }
+}

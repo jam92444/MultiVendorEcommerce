@@ -1,10 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import "../../Styles/components/User/Login.scss";
 import Input from "../../Components/UI/Input";
 import Button from "../../Components/UI/Button";
 import UserLayout from "../../layout/UserLayout";
 import { useNavigate } from "react-router-dom";
 import getUser, { createUser } from "../../services/Auth/Login";
+import { AppContext } from "../../Context/AppContext"; // ✅ import context
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -16,10 +17,13 @@ const Login = () => {
   });
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+
   const nameRef = useRef(null);
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const confirmPasswordRef = useRef(null);
+
+  const { setUser } = useContext(AppContext); // ✅ get setUser from context
 
   const handleToggle = () => {
     setIsLogin(!isLogin);
@@ -32,7 +36,6 @@ const Login = () => {
     setErrors({});
   };
 
-  // Email and password validation
   const validate = () => {
     const newErrors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -65,7 +68,6 @@ const Login = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // handling changes
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -75,13 +77,16 @@ const Login = () => {
     if (!validate()) return;
 
     if (isLogin) {
-      // Login flow
       const user = await getUser(formData.email, formData.password);
       if (!user) {
-        setErrors("Invalid email or password");
+        setErrors({ email: "Invalid email or password" });
         return;
       }
+
+      // ✅ Save to localStorage and update context
       localStorage.setItem("user", JSON.stringify(user));
+      setUser(user);
+
       switch (user.role) {
         case "admin":
           navigate("/admin/dashboard");
@@ -91,10 +96,8 @@ const Login = () => {
           break;
         default:
           navigate("/");
-          break;
       }
     } else {
-      // Signup flow
       const newUser = {
         username: formData.name,
         email: formData.email,
@@ -105,20 +108,16 @@ const Login = () => {
       const createdUser = await createUser(newUser);
 
       if (!createdUser) {
-        setErrors("Signup failed. Please try again.");
+        setErrors({ email: "Signup failed. Please try again." });
         return;
       }
 
       localStorage.setItem("user", JSON.stringify(createdUser));
-
+      setUser(createdUser);
       navigate("/");
-
-      setFormData({ name: "", email: "", password: "", confirmPassword: "" });
-      setErrors({});
     }
   };
 
-  // Handle Enter key to jump to next field
   const handleKeyDown = (e, nextRef) => {
     if (e.key === "Enter" && nextRef?.current) {
       e.preventDefault();
@@ -126,13 +125,12 @@ const Login = () => {
     }
   };
 
-
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       const user = JSON.parse(storedUser);
+      setUser(user); // ✅ ensure context stays synced
 
-      // Redirect based on user role
       switch (user.role) {
         case "admin":
           navigate("/admin/dashboard");
@@ -142,11 +140,9 @@ const Login = () => {
           break;
         default:
           navigate("/");
-          break;
       }
     }
-  }, [navigate]);
-
+  }, [navigate, setUser]);
 
   return (
     <UserLayout className="container">

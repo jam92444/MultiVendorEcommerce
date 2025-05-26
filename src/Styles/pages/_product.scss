@@ -1,0 +1,90 @@
+    /* components/Product/Product.scss */
+
+.product-page {
+  display: flex;
+  flex-direction: column;
+  padding-top: 2.5rem;
+  border-top: 1px solid #d1d5db;
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+    gap: 2rem;
+  }
+}
+
+.filter-sidebar {
+  min-width: 240px;
+  padding: 0 1rem;
+
+  .filter-toggle {
+    font-size: 1.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .dropdown-icon {
+    height: 0.75rem;
+
+    &.rotate {
+      transform: rotate(90deg);
+    }
+  }
+
+  .filter-group {
+    border: 1px solid #ccc;
+    padding: 1rem;
+    margin-top: 1rem;
+
+    .filter-title {
+      font-weight: 500;
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .filter-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: #555;
+
+      input {
+        margin-right: 0.5rem;
+      }
+    }
+  }
+}
+
+.product-grid {
+  flex: 1;
+  padding: 0 1rem;
+
+  .grid-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    .sort-select {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      font-size: 0.875rem;
+    }
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+}

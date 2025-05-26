@@ -1,0 +1,33 @@
+
+
+.title-wrapper {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.title-text {
+  color: #6b7280; // text-gray-500
+  font-size: 1rem;
+
+  @media (min-width: 640px) {
+    font-size: 1.1rem;
+  }
+}
+
+.title-highlight {
+  color: #374151; // text-gray-700
+  font-weight: 500;
+}
+
+.title-line {
+  width: 2rem;
+  height: 1px;
+  background-color: #374151;
+
+  @media (min-width: 640px) {
+    width: 3rem;
+    height: 2px;
+  }
+}

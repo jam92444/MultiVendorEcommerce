@@ -1,0 +1,43 @@
+.order-confirmation {
+  max-width: 600px;
+  margin: 4rem auto;
+  padding: 2rem;
+  background: #f0fdf4;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.1);
+  font-family: "Poppins", sans-serif;
+
+  .icon-success {
+    font-size: 4rem;
+    color: #10b981;
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+    color: #065f46;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: #047857;
+    margin-bottom: 2rem;
+  }
+
+  .back-home-btn {
+    padding: 0.75rem 2rem;
+    background-color: #10b981;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #059669;
+    }
+  }
+}

@@ -40,13 +40,13 @@ const Navbar = () => {
             </Link>
           </li>
           <li>
-            <Link to="/about" onClick={toggleMenu}>
+            <Link to="/" onClick={toggleMenu}>
               About
             </Link>
           </li>
           <li>
-            <Link to="/contact" onClick={toggleMenu}>
-              Contact
+            <Link to="/orders" onClick={toggleMenu}>
+              Orders
             </Link>
           </li>
           <li>

@@ -12,17 +12,20 @@ import AddProduct from "../Screens/Home/Vendor/AddProduct";
 import AllOrders from "../Screens/Home/Vendor/AllOrders";
 import NewOrders from "../Screens/Home/Vendor/NewOrders";
 import AllProducts from "../Screens/Home/Vendor/AllProducts";
-
+import Product from "../Screens/Home/User/Product";
+import ProductDetail from "../Screens/Home/User/ProductDetail";
+import CartPage from "../Screens/Home/User/CartPage";
+import OrderConfirmation from "../Components/OrderConfirmation";
+import CheckOut from "../Components/ProceedToOrder";
+import PaymentPage from "../Screens/Home/User/PaymentPage";
+import OrdersPage from "../Screens/Home/User/OrdersPage";
 // Define your routes
 const router = createHashRouter([
   // Public Routes
   { path: "/", element: <Home /> },
   { path: "/login", element: <Login /> },
-  // { path: "/register", element: <Register /> },
-  // { path: "/auth/forgot-password", element: <ForgotPassword /> },
-  // { path: "/auth/reset-password/:token", element: <ResetPassword /> },
-  // { path: "/products", element: <ProductList /> },
-  // { path: "/product/:id", element: <ProductDetail /> },
+  { path: "/products", element: <Product /> },
+  { path: "/products/:productId", element: <ProductDetail /> },
 
   // Admin Private Routes
   {
@@ -55,17 +58,19 @@ const router = createHashRouter([
   },
 
   // Customer Private Routes
-  // {
-  //   path: "/customer/dashboard",
-  //   element: <PrivateRoute allowedRoles={["customer"]} />,
-  //   children: [
-  //     { path: "/customer/dashboard", element: <CustomerDashboard /> },
-  //     { path: "/cart", element: <Cart /> },
-  //     { path: "/checkout", element: <Checkout /> },
-  //     { path: "/orders", element: <CustomerOrders /> },
-  //     { path: "/orders/:id", element: <OrderDetails /> },
-  //   ],
-  // },
+  {
+    path: "",
+    element: <PrivateRoute allowedRoles={["user"]} />,
+    children: [
+      { path: "/cart", element: <CartPage /> },
+      { path: "/checkout", element: <CheckOut /> },
+      { path: "/payment", element: <PaymentPage /> },
+      { path: "/order-confirmation", element: <OrderConfirmation /> },
+
+      { path: "/orders", element: <OrdersPage /> },
+      // { path: "/orders/:id", element: <OrderDetails /> },
+    ],
+  },
   {
     path:'*',
     element: <h1>404 Page Not Found</h1>

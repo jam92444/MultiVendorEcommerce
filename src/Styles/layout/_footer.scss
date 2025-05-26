@@ -1,0 +1,110 @@
+.footer {
+  background-color: #222;
+  color: #eee;
+  padding: 40px 20px 20px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
+  &__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: space-between;
+  }
+
+  &__section {
+    flex: 1 1 250px;
+    min-width: 200px;
+
+    h3, h4 {
+      margin-bottom: 15px;
+      color: #f8f8f8;
+    }
+
+    p {
+      line-height: 1.6;
+      font-size: 0.95rem;
+      color: #bbb;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+
+      li {
+        margin-bottom: 10px;
+
+        a {
+          color: #bbb;
+          text-decoration: none;
+          transition: color 0.3s ease;
+
+          &:hover {
+            color: #ff6600;
+          }
+        }
+      }
+    }
+  }
+
+  &__bottom {
+    margin-top: 30px;
+    text-align: center;
+    border-top: 1px solid #444;
+    padding-top: 15px;
+    font-size: 0.85rem;
+    color: #777;
+  }
+
+  // Responsive adjustments
+  @media (max-width: 1024px) {
+    &__container {
+      gap: 30px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 30px 15px 15px;
+
+    &__container {
+      flex-direction: column;
+      gap: 25px;
+      align-items: center;   // center content on small screens
+    }
+
+    &__section {
+      min-width: 100%;
+      text-align: center;    // center text for better mobile UX
+
+      ul {
+        display: inline-block; // keep list inline but centered
+        padding: 0;
+      }
+    }
+
+    &__bottom {
+      font-size: 0.8rem;
+      padding-top: 10px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 25px 10px 10px;
+
+    &__section {
+      h3, h4 {
+        font-size: 1.1rem;
+      }
+
+      p, ul li a {
+        font-size: 0.9rem;
+      }
+    }
+
+    &__bottom {
+      font-size: 0.75rem;
+      padding-top: 8px;
+    }
+  }
+}

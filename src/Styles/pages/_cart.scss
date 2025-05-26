@@ -1,0 +1,194 @@
+@use "../abstracts/index" as *;
+
+
+.cart-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+//   background: #fafafa;
+
+  .title {
+    text-align: start;
+    margin-bottom: 2rem;
+    font-weight: $font-semibold;
+    color: $text-dark;
+    font-size: $font-lg;
+  }
+
+  .cart-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border: 1px solid #ddd;
+      padding: 1rem;
+      border-radius: 10px;
+      background-color: white;
+      box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
+
+      img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 10px;
+        flex-shrink: 0;
+      }
+
+      .item-details {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+
+        h2 {
+          margin: 0;
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: #111;
+        }
+
+        p {
+          margin: 0.4rem 0;
+          color: #555;
+          font-size: 0.95rem;
+        }
+
+        .quantity {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          margin-top: 0.5rem;
+
+          button {
+            width: 32px;
+            height: 32px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            background-color: #3b82f6;  /* nice blue */
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+
+            &:hover {
+              background-color: #2563eb; /* darker blue on hover */
+            }
+          }
+
+          span {
+            min-width: 30px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1rem;
+          }
+        }
+
+        button.remove-button {
+          margin-top: 1rem;
+          padding: 0.5rem 1rem;
+          background-color: #ef4444; /* red */
+          color: white;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          align-self: flex-start;
+          font-weight: 600;
+          transition: background-color 0.3s ease;
+
+          &:hover {
+            background-color: #b91c1c; /* dark red */
+          }
+        }
+      }
+    }
+  }
+
+  .cart-summary {
+    margin-top: 2.5rem;
+    text-align: right;
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+
+    p {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 1rem;
+    }
+
+    .checkout-button {
+      padding: 0.85rem 3rem;
+      background-color: $button-blue; /* emerald green */
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 1rem;
+      box-shadow: 0 4px 10px rgb(16 185 129 / 0.5);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+
+      &:hover {
+        background-color: #059669; /* darker green */
+        box-shadow: 0 6px 15px rgb(5 150 105 / 0.7);
+      }
+    }
+  }
+
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    padding: 1rem;
+
+    .cart-items {
+      .cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+
+        img {
+          width: 100%;
+          height: auto;
+          border-radius: 8px;
+        }
+
+        .item-details {
+          width: 100%;
+
+          .quantity {
+            justify-content: flex-start;
+          }
+
+          button.remove-button {
+            align-self: stretch;
+            text-align: center;
+          }
+        }
+      }
+    }
+
+    .cart-summary {
+      text-align: center;
+      p {
+        font-size: 1.3rem;
+      }
+
+      .checkout-button {
+        width: 100%;
+        padding: 1rem 0;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+}

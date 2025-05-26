@@ -3,22 +3,24 @@ import Input from "../../../Components/UI/Input";
 import ImageUploading from "react-images-uploading";
 import DashboardLayout from "../../../layout/DashboardLayout";
 import Button from "../../../Components/UI/Button";
-
 import asset from "../../../Utility/asset";
 import "../../../Styles/pages/Vendors/_addProduct.scss";
 import { AppContext } from "../../../Context/AppContext";
+import axios from "axios";
 
 const AddProduct = () => {
   const [productName, setProductName] = useState("");
   const [images, setImages] = useState([]);
-  const [price, setPrice] = useState("");
-  const [discountedPrice, setDiscountedPrice] = useState("");
+  const [mrp, setMrp] = useState(""); // original price
+  const [actualPrice, setActualPrice] = useState(""); // discounted/offer price
   const [sizes, setSizes] = useState([]);
   const [description, setDescription] = useState("");
   const { user } = useContext(AppContext);
+
   const handleImageChange = (imageList) => {
     setImages(imageList);
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const imageBase64Array = images.map((image) => image.data_url);
@@ -26,13 +28,14 @@ const AddProduct = () => {
     const productData = {
       name: productName,
       images: imageBase64Array,
-      price,
-      discountedPrice,
+      price: actualPrice, // ✅ Correctly mapped
+      mrp,                // ✅ Correctly mapped
       sizes,
       description,
       vendorId: user.id,
       approved: false,
     };
+
     try {
       await axios.post(
         "https://66c432c4b026f3cc6cee532c.mockapi.io/products",
@@ -41,8 +44,8 @@ const AddProduct = () => {
       // Clear form
       setProductName("");
       setImages([]);
-      setPrice("");
-      setDiscountedPrice("");
+      setMrp("");
+      setActualPrice("");
       setSizes([]);
       setDescription("");
     } catch (err) {
@@ -60,18 +63,18 @@ const AddProduct = () => {
       placeholder: "Enter product name",
     },
     {
-      label: "Price",
+      label: "MRP",
       type: "number",
-      value: price,
-      onChange: (e) => setPrice(e.target.value),
-      placeholder: "Enter price",
+      value: mrp,
+      onChange: (e) => setMrp(e.target.value),
+      placeholder: "Enter original price (MRP)",
     },
     {
       label: "Discounted Price",
       type: "number",
-      value: discountedPrice,
-      onChange: (e) => setDiscountedPrice(e.target.value),
-      placeholder: "Enter discounted price",
+      value: actualPrice,
+      onChange: (e) => setActualPrice(e.target.value),
+      placeholder: "Enter discounted/offer price",
     },
     {
       label: "Sizes (comma-separated)",
@@ -81,6 +84,7 @@ const AddProduct = () => {
       placeholder: "e.g. S, M, L, XL",
     },
   ];
+
   return (
     <DashboardLayout className="container">
       <form onSubmit={handleSubmit} className="add-product">
@@ -97,8 +101,9 @@ const AddProduct = () => {
                 required
               />
             </div>
-          ))}{" "}
-        </div>{" "}
+          ))}
+        </div>
+
         <div className="add-product__field">
           <label>Images</label>
           <ImageUploading
@@ -119,14 +124,11 @@ const AddProduct = () => {
                   background="transparent"
                   border="0"
                   width="100px"
-                  //   margin="2rem 0"
                 >
                   <img
-                    style={{
-                      width: "100%",
-                    }}
+                    style={{ width: "100%" }}
                     src={asset.Upload}
-                    alt=""
+                    alt="Upload"
                   />
                 </Button>
                 <Button
@@ -142,9 +144,7 @@ const AddProduct = () => {
                     <div
                       key={index}
                       className="add-product__preview"
-                      style={{
-                        position: "relative",
-                      }}
+                      style={{ position: "relative" }}
                     >
                       <img src={image.data_url} width="150px" alt="preview" />
                       <Button
@@ -166,11 +166,12 @@ const AddProduct = () => {
                       </Button>
                     </div>
                   ))}
-                </div>{" "}
+                </div>
               </div>
             )}
-          </ImageUploading>{" "}
-        </div>{" "}
+          </ImageUploading>
+        </div>
+
         <div className="add-product__field">
           <label>Description</label>
           <textarea
@@ -180,8 +181,9 @@ const AddProduct = () => {
             placeholder="Product description"
             rows={4}
             required
-          />{" "}
-        </div>{" "}
+          />
+        </div>
+
         <Button type="submit" className="add-product__submit">
           Submit
         </Button>
