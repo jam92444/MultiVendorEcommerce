@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../../../Styles/pages/_payment.scss";
 import { useNavigate } from "react-router-dom";
-import UserLayout from "../../../layout/UserLayout";
+import Layout from "../../../layout/Layout";
 
 const PaymentPage = () => {
   const [orderInfo, setOrderInfo] = useState(null);
@@ -49,7 +49,7 @@ const PaymentPage = () => {
   const { items, amount, shipping } = orderInfo;
 
   return (
-    <UserLayout className="container">
+    <Layout className="container">
       <div className="payment-page">
         <h1 className="payment-title">Payment</h1>
 
@@ -82,7 +82,7 @@ const PaymentPage = () => {
           </div>
         </div>
       </div>
-    </UserLayout>
+    </Layout>
   );
 };
 

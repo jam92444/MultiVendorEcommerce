@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import UserLayout from "../../../layout/UserLayout";
 import "../../../Styles/pages/_productDetail.scss";
 import { AppContext } from "../../../Context/AppContext";
 import asset from "../../../Utility/asset";
+import Layout from "../../../layout/Layout";
 
 const ProductDetail = () => {
   const { productId } = useParams();
@@ -29,7 +29,7 @@ const ProductDetail = () => {
   if (!productData) return <div>Loading...</div>;
 
   return (
-    <UserLayout className="container">
+    <Layout className="container">
       <div className="product-container">
         <div className="product-main">
           <div className="product-images">
@@ -105,7 +105,7 @@ const ProductDetail = () => {
           </p>
         </div>
       </div>
-    </UserLayout>
+    </Layout>
   );
 };
 

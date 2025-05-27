@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
-import DashboardLayout from "../../../layout/DashboardLayout";
 import { AppContext } from "../../../Context/AppContext";
 import { useNavigate } from "react-router-dom";
+import Layout from "../../../layout/Layout";
 
 const VendorList = () => {
   const { allUser, setAllUser } = useContext(AppContext);
@@ -46,7 +46,7 @@ const VendorList = () => {
   };
 
   return (
-    <DashboardLayout className="container">
+    <Layout className="container">
       <div style={{ padding: "20px" }}>
         <h2
           style={{
@@ -218,7 +218,7 @@ const VendorList = () => {
           )}
         </div>
       </div>
-    </DashboardLayout>
+    </Layout>
   );
 };
 

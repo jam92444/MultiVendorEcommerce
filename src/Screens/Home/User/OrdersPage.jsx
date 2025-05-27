@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import UserLayout from "../../../layout/UserLayout";
 import "../../../Styles/pages/_orders.scss";
+import Layout from "../../../layout/Layout";
 
 const OrdersPage = () => {
   const [orders, setOrders] = useState([]);
@@ -28,39 +28,39 @@ const OrdersPage = () => {
 
   if (loading) {
     return (
-      <UserLayout className="container">
+      <Layout className="container">
         <div className="orders-page empty">
           <h1>Your Orders</h1>
           <p>Loading orders...</p>
         </div>
-      </UserLayout>
+      </Layout>
     );
   }
 
   if (error) {
     return (
-      <UserLayout className="container">
+      <Layout className="container">
         <div className="orders-page empty">
           <h1>Your Orders</h1>
           <p>Error: {error}</p>
         </div>
-      </UserLayout>
+      </Layout>
     );
   }
 
   if (orders.length === 0) {
     return (
-      <UserLayout className="container">
+      <Layout className="container">
         <div className="orders-page empty">
           <h1>Your Orders</h1>
           <p>You have no past orders yet.</p>
         </div>
-      </UserLayout>
+      </Layout>
     );
   }
 
   return (
-    <UserLayout className="container">
+    <Layout className="container">
       <div className="orders-page">
         <h1 className="title">Your Orders</h1>
         {orders.map((order, idx) => (
@@ -93,7 +93,7 @@ const OrdersPage = () => {
           </div>
         ))}
       </div>
-    </UserLayout>
+    </Layout>
   );
 };
 

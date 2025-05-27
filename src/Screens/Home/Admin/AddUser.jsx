@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import DashboardLayout from "../../../layout/DashboardLayout";
 import { checkUserExists, createUser } from "../../../services/Auth/Login";
 import Input from "../../../Components/UI/Input";
 import "../../../Styles/main.scss";
 import "../../../Styles/layout/_grid.scss"
+import Layout from "../../../layout/Layout";
 
 const AddUser = () => {
   const [type, setType] = useState("user"); // user or vendor
@@ -109,7 +109,7 @@ const AddUser = () => {
   const fieldsToRender = type === "user" ? userFields : vendorFields;
 
   return (
-    <DashboardLayout>
+    <Layout>
       <form
         onSubmit={handleSubmit}
         style={{
@@ -295,7 +295,7 @@ const AddUser = () => {
           }
         `}</style>
       </form>
-    </DashboardLayout>
+    </Layout>
   );
 };
 

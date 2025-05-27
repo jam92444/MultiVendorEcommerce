@@ -6,6 +6,7 @@ import UserLayout from "../../layout/UserLayout";
 import { useNavigate } from "react-router-dom";
 import getUser, { createUser } from "../../services/Auth/Login";
 import { AppContext } from "../../Context/AppContext"; // ✅ import context
+import Layout from "../../layout/Layout";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -145,7 +146,7 @@ const Login = () => {
   }, [navigate, setUser]);
 
   return (
-    <UserLayout className="container">
+    <Layout className="container">
       <div className="login">
         <div className="forms">
           <form className="Login-form" onSubmit={handleSubmit}>
@@ -249,7 +250,7 @@ const Login = () => {
           </form>
         </div>
       </div>
-    </UserLayout>
+    </Layout>
   );
 };
 

@@ -6,13 +6,7 @@ import "../Styles/layout/_container.scss"
 const UserLayout = ({ children }) => {
   return (
     <>
-      <header>
-        <Navbar />
-      </header>
-      <main className="container">{children}</main>
-      <footer>
-        <Footer />
-      </footer>
+     
     </>
   );
 };

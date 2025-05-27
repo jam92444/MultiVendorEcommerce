@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { AppContext } from "../../../Context/AppContext";
 import { useNavigate } from "react-router-dom"; // 🔹 ADD THIS
 import "../../../Styles/pages/_cart.scss";
-import UserLayout from "../../../layout/UserLayout";
+import Layout from "../../../layout/Layout";
 
 const CartPage = () => {
   const { cart, setCart, currency } = useContext(AppContext);
@@ -41,17 +41,17 @@ const CartPage = () => {
 
   if (cart.length === 0) {
     return (
-      <UserLayout className="container">
+      <Layout className="container">
         <div className="cart-page">
           <p className="title">Your Cart</p>
           <p>Your cart is empty.</p>
         </div>
-      </UserLayout>
+      </Layout>
     );
   }
 
   return (
-    <UserLayout className="container">
+    <Layout className="container">
       <div className="cart-page">
         <h1>Your Cart</h1>
         <div className="cart-items">
@@ -82,7 +82,7 @@ const CartPage = () => {
           </button>
         </div>
       </div>
-    </UserLayout>
+    </Layout>
   );
 };
 

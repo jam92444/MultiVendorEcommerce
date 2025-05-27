@@ -1,12 +1,12 @@
 import React, { useContext, useState } from "react";
 import Input from "../../../Components/UI/Input";
 import ImageUploading from "react-images-uploading";
-import DashboardLayout from "../../../layout/DashboardLayout";
 import Button from "../../../Components/UI/Button";
 import asset from "../../../Utility/asset";
 import "../../../Styles/pages/Vendors/_addProduct.scss";
 import { AppContext } from "../../../Context/AppContext";
 import axios from "axios";
+import Layout from "../../../layout/Layout";
 
 const AddProduct = () => {
   const [productName, setProductName] = useState("");
@@ -86,7 +86,7 @@ const AddProduct = () => {
   ];
 
   return (
-    <DashboardLayout className="container">
+    <Layout className="container">
       <form onSubmit={handleSubmit} className="add-product">
         <h2 className="add-product__title">Add Product</h2>
         <div className="add-product__fields-grid">
@@ -188,7 +188,7 @@ const AddProduct = () => {
           Submit
         </Button>
       </form>
-    </DashboardLayout>
+    </Layout>
   );
 };
 

@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
-import DashboardLayout from "../../../layout/DashboardLayout";
 import { AppContext } from "../../../Context/AppContext";
 import { useNavigate } from "react-router-dom";
+import Layout from "../../../layout/Layout";
 
 const UserList = () => {
   const { allUser, setAllUser } = useContext(AppContext);
@@ -42,7 +42,7 @@ const UserList = () => {
     }
   };
   return (
-    <DashboardLayout>
+    <Layout>
       <div style={{ padding: "20px" }}>
         <h2
           style={{ marginBottom: "1rem", fontWeight: "600", color: "#1F2937" }}
@@ -210,7 +210,7 @@ const UserList = () => {
           )}
         </div>
       </div>
-    </DashboardLayout>
+    </Layout>
   );
 };
 

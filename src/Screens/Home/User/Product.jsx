@@ -5,7 +5,7 @@ import Title from "../../../Components/Title";
 import asset from "../../../Utility/asset";
 import { AppContext } from "../../../Context/AppContext";
 import ProductItems from "../../../Components/ProductItems";
-import UserLayout from "../../../layout/UserLayout";
+import Layout from "../../../layout/Layout";
 
 const Product = () => {
   const { products, showSearch, search } = useContext(AppContext);
@@ -78,7 +78,7 @@ const Product = () => {
   }, [sortType]);
 
   return (
-    <UserLayout className="container ">
+    <Layout className="container ">
       <div className="product-page">
         {/* Filter Sidebar */}
         <aside className="filter-sidebar">
@@ -160,7 +160,7 @@ const Product = () => {
           </div>
         </main>
       </div>
-    </UserLayout>
+    </Layout>
   );
 };
 

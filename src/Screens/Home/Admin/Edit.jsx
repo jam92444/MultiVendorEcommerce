@@ -2,8 +2,8 @@ import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import "../../../Styles/pages/_edit.scss";
 import { AppContext } from "../../../Context/AppContext";
-import DashboardLayout from "../../../layout/DashboardLayout";
 import Input from "../../../Components/UI/Input";
+import Layout from "../../../layout/Layout";
 
 const Edit = () => {
   const { id } = useParams();
@@ -47,7 +47,7 @@ const Edit = () => {
     }
   };
 
-  if (!formData) return <DashboardLayout><p>Loading...</p></DashboardLayout>;
+  if (!formData) return <Layout><p>Loading...</p></Layout>;
 
   const isVendor = formData.role === "vendor";
 
@@ -69,7 +69,7 @@ const Edit = () => {
   const fieldsToRender = isVendor ? vendorFields : userFields;
 
   return (
-    <DashboardLayout className="container">
+    <Layout className="container">
       <form onSubmit={handleSubmit} className="edit-form-container">
         <h2>Edit {formData.role === "user" ? "User" : "Vendor"}</h2>
 
@@ -100,7 +100,7 @@ const Edit = () => {
           </p>
         )}
       </form>
-    </DashboardLayout>
+    </Layout>
   );
 };
 

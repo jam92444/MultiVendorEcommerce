@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import DashboardLayout from "../../../layout/DashboardLayout";
 import "../../../Styles/pages/Vendors/_vendorOrders.scss";
 import { AppContext } from "../../../Context/AppContext";
+import Layout from "../../../layout/Layout";
 
 const VendorOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -56,24 +56,24 @@ const VendorOrders = () => {
 
   if (loading) {
     return (
-      <DashboardLayout>
+      <Layout>
         <h1>Vendor - Orders</h1>
         <p>Loading orders...</p>
-      </DashboardLayout>
+      </Layout>
     );
   }
 
   if (error) {
     return (
-      <DashboardLayout>
+      <Layout>
         <h1>Vendor - Orders</h1>
         <p>Error: {error}</p>
-      </DashboardLayout>
+      </Layout>
     );
   }
 
   return (
-    <DashboardLayout>
+    <Layout>
       <div className="vendor-orders">
         <h1 className="title">Vendor - My Orders</h1>
         {orders.map(order => (
@@ -122,7 +122,7 @@ const VendorOrders = () => {
           </div>
         ))}
       </div>
-    </DashboardLayout>
+    </Layout>
   );
 };
 

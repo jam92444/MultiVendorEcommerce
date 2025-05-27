@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import DashboardLayout from "../../../layout/DashboardLayout";
 import { allProducts, deleteProduct } from "../../../services/Vendor/Products";
 import { getAllUsers } from "../../../services/admin/allUser";
 import Button from "../../../Components/UI/Button";
 import "../../../Styles/pages/Vendors/_allProducts.scss";
 import { approveProduct, rejectProduct } from "../../../services/admin/product";
+import Layout from "../../../layout/Layout";
 
 const AllProducts = () => {
   const [products, setProducts] = useState([]);
@@ -145,7 +145,7 @@ const AllProducts = () => {
   };
 
   return (
-    <DashboardLayout className="container">
+    <Layout className="container">
       <h2 className="all-products__title">All Products</h2>
       <div className="all-products__table">
         <div className="all-products__header">
@@ -250,7 +250,7 @@ const AllProducts = () => {
           confirmText={rejecting ? "Rejecting..." : "Yes, Reject"}
         />
       )}
-    </DashboardLayout>
+    </Layout>
   );
 };
 

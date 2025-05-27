@@ -42,7 +42,7 @@ const router = createHashRouter([
       { path: "all-products", element: <AllProducts /> },
       { path: "all-orders", element: <AllOrders /> },
     ],
-  },
+  }, 
 
   // Vendor Private Routes
   {

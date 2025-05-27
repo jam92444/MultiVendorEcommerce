@@ -1,8 +1,7 @@
-import DashboardLayout from "../../../layout/DashboardLayout";
 import React, { useEffect, useState } from "react";
 import "../../../Styles/pages/_orders.scss"; // Style as needed
-import UserLayout from "../../../layout/UserLayout";
 import "../../../Styles/pages/Admin/_allOrders.scss";
+import Layout from "../../../layout/Layout";
 const AllOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,24 +29,24 @@ const AllOrders = () => {
 
   if (loading) {
     return (
-      <DashboardLayout className="container">
+      <Layout className="container">
         <h1>Admin - All Orders</h1>
         <p>Loading orders...</p>
-      </DashboardLayout>
+      </Layout>
     );
   }
 
   if (error) {
     return (
-      <UserLayout className="container">
+      <Layout className="container">
         <h1>Admin - All Orders</h1>
         <p>Error: {error}</p>
-      </UserLayout>
+      </Layout>
     );
   }
 
   return (
-    <DashboardLayout className="container">
+    <Layout className="container">
       <div className="orders-page">
         <h1 className="title">Admin - All Orders</h1>
         <div className="orders-grid">
@@ -113,7 +112,7 @@ const AllOrders = () => {
           ))}
         </div>
       </div>
-    </DashboardLayout>
+    </Layout>
   );
 };
 
