@@ -62,10 +62,10 @@ const router = createHashRouter([
     path: "",
     element: <PrivateRoute allowedRoles={["user"]} />,
     children: [
-      { path: "/cart", element: <CartPage /> },
-      { path: "/checkout", element: <CheckOut /> },
-      { path: "/payment", element: <PaymentPage /> },
-      { path: "/order-confirmation", element: <OrderConfirmation /> },
+      { path: "cart", element: <CartPage /> },
+      { path: "checkout", element: <CheckOut /> },
+      { path: "payment", element: <PaymentPage /> },
+      { path: "order-confirmation", element: <OrderConfirmation /> },
 
       { path: "/orders", element: <OrdersPage /> },
       // { path: "/orders/:id", element: <OrderDetails /> },

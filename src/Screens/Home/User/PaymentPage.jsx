@@ -7,7 +7,7 @@ const PaymentPage = () => {
   const [orderInfo, setOrderInfo] = useState(null);
   const navigate = useNavigate();
 
-  // Fetch order info from localStorage on mount
+  
   useEffect(() => {
     const storedOrder = localStorage.getItem("orderInfo");
 
@@ -19,15 +19,14 @@ const PaymentPage = () => {
         navigate("/checkout");
       }
     } else {
-      navigate("/checkout"); // Redirect if no data
+      navigate("/checkout"); 
     }
   }, [navigate]);
 
   const handlePayment = () => {
-    // This is where you'd integrate payment gateway logic
+
     alert("Payment successful!");
 
-    // Optional: Save this order to final orders history
     const finalOrder = {
       ...orderInfo,
       paidAt: new Date().toISOString(),
@@ -36,14 +35,13 @@ const PaymentPage = () => {
     existingOrders.push(finalOrder);
     localStorage.setItem("orders", JSON.stringify(existingOrders));
 
-    // Cleanup
+
     localStorage.removeItem("orderInfo");
     localStorage.removeItem("cart");
 
     navigate("/order-confirmation");
   };
 
-  // Show nothing until order is loaded
   if (!orderInfo) return null;
 
   const { items, amount, shipping } = orderInfo;
@@ -69,12 +67,12 @@ const PaymentPage = () => {
             {items.map((item, idx) => (
               <div className="summary-item" key={idx}>
                 <span>{item.title} (x{item.quantity})</span>
-                <span>₹{(item.price * item.quantity).toFixed(2)}</span>
+                <span>{(item.price * item.quantity).toFixed(2)}</span>
               </div>
             ))}
             <div className="summary-total">
               <strong>Total:</strong>
-              <strong>₹{parseFloat(amount).toFixed(2)}</strong>
+              <strong>{parseFloat(amount).toFixed(2)}</strong>
             </div>
             <button className="pay-now-btn" onClick={handlePayment}>
               Pay Now

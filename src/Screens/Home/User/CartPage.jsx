@@ -1,38 +1,30 @@
-import React, { useContext } from "react";
-import { AppContext } from "../../../Context/AppContext";
-import { useNavigate } from "react-router-dom"; // 🔹 ADD THIS
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  updateQuantity,
+  removeItem,
+} from "../../../redux/reducers/user/cartSlice";
+import { useNavigate } from "react-router-dom";
 import "../../../Styles/pages/_cart.scss";
 import Layout from "../../../layout/Layout";
 
 const CartPage = () => {
-  const { cart, setCart, currency } = useContext(AppContext);
-  const navigate = useNavigate(); // 🔹 ADD THIS
+  const cart = useSelector((state) => state.cart?.items ?? []);
+  const currency = "$"; // or get this from Redux or Context if you have
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleQuantityChange = (id, size, newQuantity) => {
+  const handleQuantityChange = (id, selectedSize, newQuantity) => {
     if (newQuantity < 1) return;
-
-    setCart((prevCart) =>
-      prevCart.map((item) =>
-        item.id === id && item.selectedSize === size
-          ? { ...item, quantity: newQuantity }
-          : item
-      )
-    );
+    dispatch(updateQuantity({ id, selectedSize, quantity: newQuantity }));
   };
 
-  const handleRemoveItem = (id, size) => {
-    setCart((prevCart) =>
-      prevCart.filter(
-        (item) => !(item.id === id && item.selectedSize === size)
-      )
-    );
+  const handleRemoveItem = (id, selectedSize) => {
+    dispatch(removeItem({ id, selectedSize }));
   };
 
   const calculateTotal = () => {
-    return cart.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
+    return cart.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
   const goToCheckout = () => {
@@ -56,18 +48,47 @@ const CartPage = () => {
         <h1>Your Cart</h1>
         <div className="cart-items">
           {cart.map((item, index) => (
-            <div key={`${item.id}-${item.selectedSize}-${index}`} className="cart-item">
+            <div
+              key={`${item.id}-${item.selectedSize}-${index}`}
+              className="cart-item"
+            >
               <img src={item.image} alt={item.title} />
               <div className="item-details">
                 <h2>{item.title}</h2>
                 {item.selectedSize && <p>Size: {item.selectedSize}</p>}
-                <p>{currency}{item.price.toFixed(2)}</p>
+                <p>
+                  {currency}
+                  {item.price.toFixed(2)}
+                </p>
                 <div className="quantity">
-                  <button onClick={() => handleQuantityChange(item.id, item.selectedSize, item.quantity - 1)}>-</button>
+                  <button
+                    onClick={() =>
+                      handleQuantityChange(
+                        item.id,
+                        item.selectedSize,
+                        item.quantity - 1
+                      )
+                    }
+                  >
+                    -
+                  </button>
                   <span>{item.quantity}</span>
-                  <button onClick={() => handleQuantityChange(item.id, item.selectedSize, item.quantity + 1)}>+</button>
+                  <button
+                    onClick={() =>
+                      handleQuantityChange(
+                        item.id,
+                        item.selectedSize,
+                        item.quantity + 1
+                      )
+                    }
+                  >
+                    +
+                  </button>
                 </div>
-                <button className="remove-button" onClick={() => handleRemoveItem(item.id, item.selectedSize)}>
+                <button
+                  className="remove-button"
+                  onClick={() => handleRemoveItem(item.id, item.selectedSize)}
+                >
                   Remove
                 </button>
               </div>
@@ -76,8 +97,15 @@ const CartPage = () => {
         </div>
 
         <div className="cart-summary">
-          <p>Total: {currency}{calculateTotal().toFixed(2)}</p>
-          <button className="checkout-button" onClick={goToCheckout}>
+          <p>
+            Total: {currency}
+            {calculateTotal().toFixed(2)}
+          </p>
+          <button
+            className="checkout-button"
+            style={{ backgroundColor: "black" }}
+            onClick={goToCheckout}
+          >
             Proceed to Checkout
           </button>
         </div>

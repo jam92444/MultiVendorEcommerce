@@ -1,28 +1,67 @@
-import React, { useContext, useState } from "react";
-import "../Styles/pages/_processToOrder.scss";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { AppContext } from "../Context/AppContext";
-import UserLayout from "../layout/UserLayout";
+import { useSelector } from "react-redux";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import Layout from "../layout/Layout";
+import "../Styles/pages/_processToOrder.scss";
 
 const CheckOut = () => {
-  const { cart, currency } = useContext(AppContext);
-  const [formData, setFormData] = useState({
+  const cart = useSelector((state) => state.cart.items);
+  const navigate = useNavigate();
+
+  const calculateTotal = () =>
+    cart.reduce((total, item) => total + item.price * item.quantity, 0);
+
+  const initialValues = {
     fullName: "",
     email: "",
     phone: "",
     address: "",
     city: "",
     zip: "",
+  };
+
+  const validationSchema = Yup.object().shape({
+    fullName: Yup.string()
+      .min(2, "Name must be at least 2 characters")
+      .required("Full name is required"),
+
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
+
+    phone: Yup.string()
+      .matches(
+        /^[6-9]\d{9}$/,
+        "Phone number must be a valid 10-digit Indian number starting with 6-9"
+      )
+      .required("Phone number is required"),
+
+    address: Yup.string().required("Address is required"),
+
+    city: Yup.string()
+      .matches(/^[a-zA-Z\s]+$/, "City must contain only letters and spaces")
+      .required("City is required"),
+
+    zip: Yup.string()
+      .matches(/^\d{6}$/, "ZIP code must be exactly 6 digits")
+      .required("ZIP code is required"),
   });
 
-  const [formErrors, setFormErrors] = useState({});
-  const [submitted, setSubmitted] = useState(false);
-  const navigate = useNavigate();
+  const handleSubmit = (values) => {
+    const orderInfo = {
+      items: [...cart],
+      amount: calculateTotal().toFixed(2),
+      shipping: values,
+      date: new Date().toISOString(),
+    };
 
-  const calculateTotal = () =>
-    cart.reduce((total, item) => total + item.price * item.quantity, 0);
+    localStorage.setItem("orderInfo", JSON.stringify(orderInfo));
+    navigate("/payment");
+  };
 
-  const inputs = [
+  const inputFields = [
     { name: "fullName", type: "text", placeholder: "Full Name" },
     { name: "email", type: "email", placeholder: "Email Address" },
     { name: "phone", type: "text", placeholder: "Phone Number" },
@@ -31,107 +70,115 @@ const CheckOut = () => {
     { name: "zip", type: "text", placeholder: "ZIP Code" },
   ];
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    setFormErrors((prev) => ({
-      ...prev,
-      [name]: value.trim() ? "" : "This field is required",
-    }));
-  };
-
-  const validateForm = () => {
-    const errors = {};
-    for (const [key, value] of Object.entries(formData)) {
-      if (!value.trim()) {
-        errors[key] = "This field is required";
-      }
-    }
-    return errors;
-  };
-
-  const handleMakePayment = () => {
-    const errors = validateForm();
-    setFormErrors(errors);
-    setSubmitted(true);
-
-    if (Object.keys(errors).length === 0) {
-      const orderInfo = {
-        items: [...cart],
-        amount: calculateTotal().toFixed(2),
-        shipping: formData,
-        date: new Date().toISOString(),
-      };
-
-      // Save temporary orderInfo for payment page
-      localStorage.setItem("orderInfo", JSON.stringify(orderInfo));
-
-      // Navigate to payment (keep cart intact until payment success)
-      navigate("/payment");
-    }
-  };
-
   return (
-    <UserLayout className="container">
+    <Layout className="container">
       <div className="checkout-page">
         <h1 className="checkout-title">Checkout</h1>
         <div className="checkout-content">
           <div className="checkout-form">
             <h2>Shipping Information</h2>
-            <form noValidate>
-              {inputs.map(({ name, type, placeholder, rows }) => (
-                <div key={name} className={(name === "city" || name === "zip") ? "half-input" : ""}>
-                  {type === "textarea" ? (
-                    <textarea
-                      name={name}
-                      placeholder={placeholder}
-                      rows={rows}
-                      value={formData[name]}
-                      onChange={handleChange}
-                    />
-                  ) : (
-                    <input
-                      type={type}
-                      name={name}
-                      placeholder={placeholder}
-                      value={formData[name]}
-                      onChange={handleChange}
-                    />
-                  )}
-                  {submitted && formErrors[name] && (
-                    <p className="error">{formErrors[name]}</p>
-                  )}
-                </div>
-              ))}
-            </form>
+            <Formik
+              initialValues={initialValues}
+              validationSchema={validationSchema}
+              onSubmit={handleSubmit}
+            >
+              <Form noValidate>
+                {inputFields.map(({ name, type, placeholder, rows }) => (
+                  <div
+                    key={name}
+                    className={
+                      name === "city" || name === "zip" ? "half-input" : ""
+                    }
+                  >
+                    {type === "textarea" ? (
+                      <Field
+                        as="textarea"
+                        name={name}
+                        rows={rows}
+                        placeholder={placeholder}
+                      />
+                    ) : (
+                      <Field
+                        type={type}
+                        name={name}
+                        placeholder={placeholder}
+                      />
+                    )}
+                    <ErrorMessage name={name} component="p" className="error" />
+                  </div>
+                ))}
+
+                <button
+                  type="submit"
+                  style={{
+                    marginTop: "1.5rem",
+                    width: "100%",
+                    padding: "0.75rem",
+                    backgroundColor: "#000",
+                    color: "white",
+                    border: "1px solid #000",
+                    borderRadius: "6px",
+                    fontSize: "1rem",
+                    cursor: "pointer",
+                    transition: "background-color 0.3s ease",
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.backgroundColor = "#fff";
+                    e.target.style.color = "#1f2937"; // $text-dark
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.backgroundColor = "#000";
+                    e.target.style.color = "#fff";
+                  }}
+                >
+                  Make Payment
+                </button>
+              </Form>
+            </Formik>
           </div>
 
           <div className="checkout-summary">
             <h2>Order Summary</h2>
-            <div className="summary-items">
+            <div className="summary-items" style={{ marginBottom: "1rem" }}>
               {cart.map((item, idx) => (
-                <div key={idx} className="summary-item">
-                  <span>{item.title} (x{item.quantity})</span>
-                  <span>
-                    {currency}
-                    {(item.price * item.quantity).toFixed(2)}
-                  </span>
+                <div
+                  key={idx}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: "0.75rem 0",
+                    borderBottom: "1px solid #e5e7eb",
+                  }}
+                >
+                  <div style={{ fontWeight: 500 }}>{item.title}</div>
+                  <div style={{ color: "#4b5563" }}>
+                    ₹{(item.price * item.quantity).toFixed(2)} ({item.quantity})
+                  </div>
                 </div>
               ))}
             </div>
-            <div className="summary-total">
-              <strong>Total:</strong>
-              <strong>{currency}{calculateTotal().toFixed(2)}</strong>
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginTop: "1rem",
+                fontSize: "1.1rem",
+                fontWeight: "bold",
+                borderTop: "2px solid #000",
+                paddingTop: "1rem",
+              }}
+            >
+              <span>Total:</span>
+              <span>₹{calculateTotal().toFixed(2)}</span>
             </div>
-            <button className="place-order-btn" onClick={handleMakePayment}>
-              Make Payment
-            </button>
           </div>
         </div>
       </div>
-    </UserLayout>
+    </Layout>
   );
 };
 
 export default CheckOut;
- 

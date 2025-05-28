@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../Styles/pages/_orderConfirmation.scss";
-import UserLayout from "../layout/UserLayout";
+import Layout from "../layout/Layout";
 
 const OrderConfirmation = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Function to fetch product details by ID
+  // Fetch product details by productId from mock API
   const fetchProductById = async (productId) => {
     const res = await fetch(
       `https://66c432c4b026f3cc6cee532c.mockapi.io/products/${productId}`
@@ -32,24 +32,31 @@ const OrderConfirmation = () => {
           throw new Error("Orders data is empty or invalid");
         }
 
-        // Pick the first order (adjust if you want differently)
+        // Use the first order for submission (adjust logic if needed)
         const order = orders[0];
 
         if (!order.items || !Array.isArray(order.items)) {
           throw new Error("Order items missing or invalid");
         }
 
-        // Extract product IDs from items
+        // Get unique product IDs from the order items
         const productIds = order.items.map((item) => item.id);
 
-        // Fetch product details to get vendor IDs
+        // Fetch detailed product info to extract vendorIds
         const productDetails = await Promise.all(
-          productIds.map((productId) => fetchProductById(productId))
+          productIds.map((id) => fetchProductById(id))
         );
 
-        const vendorIds = [...new Set(productDetails.map((p) => p.vendorId))];
+        // Extract unique vendorIds, fallback to null if vendorId missing
+        const vendorIds = [
+          ...new Set(
+            productDetails.map((product) =>
+              product.vendorId !== undefined ? product.vendorId : null
+            )
+          ),
+        ].filter((id) => id !== null); // remove nulls
 
-        // Prepare order payload with extra fields
+        // Prepare payload with extra order fields
         const orderPayload = {
           ...order,
           vendorIds,
@@ -57,7 +64,7 @@ const OrderConfirmation = () => {
           orderStatus: "order initiated",
         };
 
-        // Post order
+        // Post order to your backend
         const response = await fetch(
           "https://683448c7464b4996360213ec.mockapi.io/orders",
           {
@@ -71,13 +78,12 @@ const OrderConfirmation = () => {
 
         if (!response.ok) throw new Error("Failed to submit order");
 
-        setLoading(false);
-
-        // Remove orders from localStorage (all)
+        // Successfully submitted, clear orders from localStorage
         localStorage.removeItem("orders");
+        setLoading(false);
       } catch (err) {
         setLoading(false);
-        setError(err.message); 
+        setError(err.message || "An unknown error occurred");
       }
     };
 
@@ -85,7 +91,7 @@ const OrderConfirmation = () => {
   }, []);
 
   return (
-    <UserLayout className="container">
+    <Layout className="container">
       <div className="order-confirmation">
         {loading && <p>Submitting your order...</p>}
         {error && <p className="error">{error}</p>}
@@ -100,7 +106,7 @@ const OrderConfirmation = () => {
           </>
         )}
       </div>
-    </UserLayout>
+    </Layout>
   );
 };
 

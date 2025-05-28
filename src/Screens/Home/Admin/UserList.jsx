@@ -2,11 +2,14 @@ import React, { useContext, useState } from "react";
 import { AppContext } from "../../../Context/AppContext";
 import { useNavigate } from "react-router-dom";
 import Layout from "../../../layout/Layout";
+import AddUser from "./AddUser.jsx";
 
 const UserList = () => {
   const { allUser, setAllUser } = useContext(AppContext);
   const [updatingId, setUpdatingId] = useState(null);
-  const navigate = useNavigate()
+  const [showAddUserModal, setShowAddUserModal] = useState(false);
+  const navigate = useNavigate();
+
   const filteredData = allUser.filter((item) => item.role === "user");
 
   const handleToggleBlock = async (user) => {
@@ -41,14 +44,47 @@ const UserList = () => {
       setUpdatingId(null);
     }
   };
+
+  const closeModal = () => {
+    setShowAddUserModal(false);
+    // optionally refresh user list from API here if AddUser adds new user
+  };
+
   return (
     <Layout>
       <div style={{ padding: "20px" }}>
-        <h2
-          style={{ marginBottom: "1rem", fontWeight: "600", color: "#1F2937" }}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "1rem",
+          }}
         >
-          User List
-        </h2>
+          <h2 style={{ fontWeight: "600", color: "#1F2937" }}>User List</h2>
+          <button
+            onClick={() => setShowAddUserModal(true)}
+            style={{
+              padding: "10px 20px",
+              backgroundColor: "#2563EB",
+              color: "white",
+              border: "none",
+              borderRadius: 6,
+              cursor: "pointer",
+              fontWeight: "600",
+              boxShadow: "0 2px 6px rgb(0 0 0 / 0.15)",
+              transition: "background-color 0.3s ease",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = "#1E40AF")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = "#2563EB")
+            }
+          >
+            Add User
+          </button>
+        </div>
 
         <div style={{ overflowX: "auto" }}>
           {filteredData && filteredData.length > 0 ? (
@@ -58,7 +94,8 @@ const UserList = () => {
                 minWidth: "700px",
                 borderCollapse: "separate",
                 borderSpacing: "0 8px",
-                fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+                fontFamily:
+                  "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
                 boxShadow: "0 2px 10px rgb(0 0 0 / 0.1)",
               }}
             >
@@ -181,7 +218,7 @@ const UserList = () => {
                       </button>
                       <button
                         onClick={() =>
-                          navigate(`/admin/dashboard/edit-vendor/${user.id}`)
+                          navigate(`/admin/dashboard/edit-user/${user.id}`)
                         }
                         style={{
                           marginLeft: "10px",
@@ -210,6 +247,55 @@ const UserList = () => {
           )}
         </div>
       </div>
+
+      {/* Add User Modal */}
+      {showAddUserModal && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            backgroundColor: "rgba(0,0,0,0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 9999,
+          }}
+          onClick={() => setShowAddUserModal(false)} // close on clicking outside
+        >
+          <div
+            onClick={(e) => e.stopPropagation()} // prevent close on clicking inside
+            style={{
+              backgroundColor: "white",
+              borderRadius: 8,
+              maxWidth: "700px",
+              width: "90%",
+              maxHeight: "90vh",
+              overflowY: "auto",
+              padding: 20,
+              boxShadow: "0 4px 20px rgba(0,0,0,0.25)",
+            }}
+          >
+            <button
+              onClick={() => setShowAddUserModal(false)}
+              style={{
+                float: "right",
+                background: "transparent",
+                border: "none",
+                fontSize: 24,
+                fontWeight: "bold",
+                cursor: "pointer",
+                color: "#2563EB",
+              }}
+              aria-label="Close Modal"
+            >
+              &times;
+            </button>
+
+            {/* Pass userType prop for clarity */}
+            <AddUser userType="user" closeModal={closeModal} />
+          </div>
+        </div>
+      )}
     </Layout>
   );
 };

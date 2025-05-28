@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -8,24 +8,26 @@ import {
   PlusOutlined,
   ProductFilled,
   OrderedListOutlined,
-  BoxPlotOutlined,
 } from "@ant-design/icons";
 import { Breadcrumb, Layout, Menu, theme, Grid, Button } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
-import { AppContext } from "../Context/AppContext";
+import { useDispatch, useSelector } from "react-redux";
 import "../Styles/components/_Dashboardnav.scss";
-import { GrOrderedList } from "react-icons/gr";
+import { logoutUserAndSaveCart } from "../redux/reducers/user/userSlice";
 
 const { Header, Content, Sider } = Layout;
 const { useBreakpoint } = Grid;
 
 const DashboardNav = ({ children }) => {
-  const { user, logout } = useContext(AppContext);
-  const screens = useBreakpoint();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  const screens = useBreakpoint();
   const [collapsed, setCollapsed] = useState(false);
   const breadCrumdata = location.pathname.split("/").filter(Boolean);
+
+  const user = useSelector((state) => state.user.user);
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
   useEffect(() => {
     setCollapsed(!screens.md);
@@ -34,6 +36,7 @@ const DashboardNav = ({ children }) => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
   const menuItems =
     user?.role === "admin"
       ? [
@@ -43,11 +46,6 @@ const DashboardNav = ({ children }) => {
             label: "Dashboard",
           },
           {
-            key: "/admin/dashboard/addUser",
-            icon: <PlusOutlined />,
-            label: "Add User",
-          },
-          {
             key: "/admin/dashboard/all-products",
             icon: <ProductFilled />,
             label: "Products",
@@ -55,12 +53,12 @@ const DashboardNav = ({ children }) => {
           {
             key: "/admin/dashboard/all-users",
             icon: <UnorderedListOutlined />,
-            label: "Users",
+            label: "User Management",
           },
           {
             key: "/admin/dashboard/all-vendors",
             icon: <UnorderedListOutlined />,
-            label: "Vendors",
+            label: "Vendors Management",
           },
           {
             key: "/admin/dashboard/all-orders",
@@ -95,7 +93,6 @@ const DashboardNav = ({ children }) => {
             key: "/vendor/dashboard/all-orders",
             icon: <OrderedListOutlined />,
             label: "Orders",
-          
           },
         ];
 
@@ -107,10 +104,15 @@ const DashboardNav = ({ children }) => {
     user?.role === "admin" ? "Admin Dashboard" : "Seller Dashboard";
 
   const handleLogout = () => {
-    logout();
-    navigate("/login");
+    dispatch(logoutUserAndSaveCart({ user, cart }))
+      .unwrap()
+      .then(() => {
+        navigate("/login");
+      })
+      .catch((err) => {
+        alert("Logout failed: " + err);
+      });
   };
-
 
   return (
     <Layout className="dashboard-layout container">

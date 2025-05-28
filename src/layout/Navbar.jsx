@@ -1,22 +1,26 @@
-import React, { useContext, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiMenu, FiX } from "react-icons/fi";
-import { AppContext } from "../Context/AppContext";
-import "../Styles/components/Navbar.scss"
+import { useDispatch, useSelector } from "react-redux"; 
+import "../Styles/components/Navbar.scss";
+import { logoutUserAndSaveCart } from "../redux/reducers/user/userSlice.js";
 
 const Navbar = () => {
-  const { user, logout } = useContext(AppContext);
-  const [isOpen, setIsOpen] = useState(false);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+  // redux states
+  const user = useSelector((state) => state.user.user);
+  const cart = useSelector((state) => state.cart.items); 
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-    toggleMenu(); // close menu on logout
-  };
 
+  const handleLogout = () => {
+    dispatch(logoutUserAndSaveCart({ user, cart })).then(() => {
+      navigate("/login");
+    });
+  };
   return (
     <nav className="navbar">
       <div className="navbar__container">
@@ -53,7 +57,6 @@ const Navbar = () => {
           {user ? (
             <>
               <li className="navbar__user">
-                {/* Show first letter of username or email */}
                 <div className="user-avatar">
                   {user.username
                     ? user.username.charAt(0).toUpperCase()

@@ -2,11 +2,14 @@ import React, { useContext, useState } from "react";
 import { AppContext } from "../../../Context/AppContext";
 import { useNavigate } from "react-router-dom";
 import Layout from "../../../layout/Layout";
+import AddUser from "./AddUser";
 
 const VendorList = () => {
   const { allUser, setAllUser } = useContext(AppContext);
   const [updatingId, setUpdatingId] = useState(null);
-  const navigate = useNavigate()
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
+
   const filteredData = allUser.filter((item) => item.role === "vendor");
 
   const handleToggleBlock = async (vendor) => {
@@ -15,9 +18,7 @@ const VendorList = () => {
     const updatedVendor = {
       ...vendor,
       blocked:
-        vendor.blocked === "false" || vendor.blocked === false
-          ? "true"
-          : "false",
+        vendor.blocked === "false" || vendor.blocked === false ? "true" : "false",
     };
 
     try {
@@ -34,7 +35,6 @@ const VendorList = () => {
 
       const updatedData = await response.json();
 
-      // Update context
       setAllUser((prev) =>
         prev.map((u) => (u.id === updatedData.id ? updatedData : u))
       );
@@ -48,26 +48,104 @@ const VendorList = () => {
   return (
     <Layout className="container">
       <div style={{ padding: "20px" }}>
-        <h2
+        <div
           style={{
-            marginBottom: "1rem",
-            fontWeight: "600",
-            color: "#1F2937",
-            fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          Vendor List
-        </h2>
-        <div style={{ overflowX: "auto" }}>
-          {filteredData && filteredData.length > 0 ? (
+          <h2
+            style={{
+              marginBottom: "1rem",
+              fontWeight: "600",
+              color: "#1F2937",
+            }}
+          >
+            Vendor List
+          </h2>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            style={{
+              padding: "10px 20px",
+              backgroundColor: "#2563EB",
+              color: "white",
+              border: "none",
+              borderRadius: "6px",
+              fontWeight: "600",
+              cursor: "pointer",
+              boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+            }}
+          >
+            + Add Vendor
+          </button>
+        </div>
+
+        {isModalOpen && (
+          <div
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: "rgba(0,0,0,0.5)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 1000,
+            }}
+          >
+            <div
+              style={{
+                backgroundColor: "white",
+                padding: "2rem",
+                borderRadius: "8px",
+                width: "600px",
+                maxHeight: "90vh",
+                overflowY: "auto",
+                boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
+                position: "relative",
+              }}
+            >
+              {/* Close button */}
+              <button
+                onClick={() => setIsModalOpen(false)}
+                style={{
+                  position: "absolute",
+                  top: "10px",
+                  right: "10px",
+                  background: "transparent",
+                  border: "none",
+                  fontSize: "1.5rem",
+                  cursor: "pointer",
+                  fontWeight: "700",
+                  color: "#444",
+                }}
+                aria-label="Close modal"
+              >
+                &times;
+              </button>
+
+              <AddUser
+                userType="vendor"
+                closeModal={() => {
+                  console.log("Closing modal from AddUser...");
+                  setIsModalOpen(false);
+                }}
+              />
+            </div>
+          </div>
+        )}
+
+        <div style={{ overflowX: "auto", marginTop: "20px" }}>
+          {filteredData.length > 0 ? (
             <table
               style={{
                 width: "100%",
                 minWidth: "700px",
                 borderCollapse: "separate",
                 borderSpacing: "0 8px",
-                boxShadow: "0 2px 10px rgb(0 0 0 / 0.1)",
-                fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
               }}
             >
               <thead>
@@ -80,9 +158,6 @@ const VendorList = () => {
                           padding: "12px 16px",
                           textAlign: "left",
                           fontWeight: "700",
-                          borderTopLeftRadius: heading === "ID" ? "8px" : 0,
-                          borderTopRightRadius:
-                            heading === "Action" ? "8px" : 0,
                         }}
                       >
                         {heading}
@@ -97,71 +172,29 @@ const VendorList = () => {
                     key={user.id}
                     style={{
                       backgroundColor: idx % 2 === 0 ? "#F9FAFB" : "white",
-                      transition: "background-color 0.3s ease",
-                      cursor: "default",
                     }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.backgroundColor = "#E0E7FF")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.backgroundColor =
-                        idx % 2 === 0 ? "#F9FAFB" : "white")
-                    }
                   >
-                    <td
-                      style={{
-                        padding: "12px 16px",
-                        fontWeight: "600",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {idx + 1}
-                    </td>
-                    <td
-                      style={{
-                        padding: "12px 16px",
-                        textTransform: "capitalize",
-                        whiteSpace: "nowrap",
-                        color: "#374151",
-                      }}
-                    >
+                    <td style={{ padding: "12px 16px" }}>{idx + 1}</td>
+                    <td style={{ padding: "12px 16px" }}>
                       {user.username || user.name}
                     </td>
+                    <td style={{ padding: "12px 16px" }}>{user.email}</td>
+                    <td style={{ padding: "12px 16px" }}>{user.role}</td>
                     <td
                       style={{
                         padding: "12px 16px",
-                        whiteSpace: "nowrap",
-                        color: "#4B5563",
-                      }}
-                    >
-                      {user.email}
-                    </td>
-                    <td
-                      style={{
-                        padding: "12px 16px",
-                        textTransform: "capitalize",
-                        whiteSpace: "nowrap",
-                        color: "#6B7280",
-                      }}
-                    >
-                      {user.role}
-                    </td>
-                    <td
-                      style={{
-                        padding: "12px 16px",
-                        whiteSpace: "nowrap",
-                        fontWeight: "600",
                         color:
                           user.blocked === "true" || user.blocked === true
                             ? "#DC2626"
                             : "#16A34A",
+                        fontWeight: "600",
                       }}
                     >
                       {user.blocked === "true" || user.blocked === true
                         ? "Blocked"
                         : "Active"}
                     </td>
-                    <td style={{ padding: "12px 16px", whiteSpace: "nowrap" }}>
+                    <td style={{ padding: "12px 16px" }}>
                       <button
                         onClick={() => handleToggleBlock(user)}
                         disabled={updatingId === user.id}
@@ -176,9 +209,8 @@ const VendorList = () => {
                           borderRadius: "6px",
                           cursor:
                             updatingId === user.id ? "not-allowed" : "pointer",
-                          transition: "background-color 0.3s ease",
                           fontWeight: "600",
-                          boxShadow: "0 2px 6px rgb(0 0 0 / 0.15)",
+                          marginRight: "10px",
                         }}
                       >
                         {updatingId === user.id
@@ -192,16 +224,13 @@ const VendorList = () => {
                           navigate(`/admin/dashboard/edit-vendor/${user.id}`)
                         }
                         style={{
-                          marginLeft: "10px",
                           padding: "8px 16px",
                           backgroundColor: "#3B82F6",
                           color: "white",
                           border: "none",
                           borderRadius: "6px",
-                          cursor: "pointer",
                           fontWeight: "600",
-                          transition: "background-color 0.3s ease",
-                          boxShadow: "0 2px 6px rgb(0 0 0 / 0.15)",
+                          cursor: "pointer",
                         }}
                       >
                         Edit

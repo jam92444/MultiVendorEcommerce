@@ -1,13 +1,12 @@
 @use "../abstracts/index" as *;
 
-
 .cart-page {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   color: #333;
-//   background: #fafafa;
+  //   background: #fafafa;
 
   .title {
     text-align: start;
@@ -65,19 +64,19 @@
           margin-top: 0.5rem;
 
           button {
-            width: 32px;
-            height: 32px;
-            font-size: 1.2rem;
+            width: 28px;
+            height: 28px;
+            font-size: $font-md;
             font-weight: bold;
-            background-color: #3b82f6;  /* nice blue */
-            color: white;
-            border: none;
+            color: $text-dark;
+            border: 1px solid black;
             border-radius: 6px;
             cursor: pointer;
             transition: background-color 0.3s ease;
 
             &:hover {
-              background-color: #2563eb; /* darker blue on hover */
+              background-color: $bg-black;
+              color: $text-white;
             }
           }
 
@@ -92,8 +91,7 @@
         button.remove-button {
           margin-top: 1rem;
           padding: 0.5rem 1rem;
-          background-color: #ef4444; /* red */
-          color: white;
+
           border: none;
           border-radius: 6px;
           cursor: pointer;
@@ -103,6 +101,7 @@
 
           &:hover {
             background-color: #b91c1c; /* dark red */
+            color: $text-white;
           }
         }
       }
@@ -137,8 +136,8 @@
       transition: background-color 0.3s ease, box-shadow 0.3s ease;
 
       &:hover {
-        background-color: #059669; /* darker green */
-        box-shadow: 0 6px 15px rgb(5 150 105 / 0.7);
+        box-shadow: 0 6px 15px rgba(62, 65, 64, 0.7);
+        scale: 0.95;
       }
     }
   }
@@ -181,7 +180,9 @@
 
       .checkout-button {
         width: 100%;
+        background-color: $bg-black !important;
         padding: 1rem 0;
+        // scale: 1.95;
       }
     }
   }

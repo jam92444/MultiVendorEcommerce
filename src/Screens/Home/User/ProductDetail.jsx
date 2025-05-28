@@ -1,28 +1,34 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import "../../../Styles/pages/_productDetail.scss";
 import { AppContext } from "../../../Context/AppContext";
 import asset from "../../../Utility/asset";
 import Layout from "../../../layout/Layout";
+import { addItem } from "../../../redux/reducers/user/cartSlice";
 
 const ProductDetail = () => {
   const { productId } = useParams();
-  const { products, currency, addToCart } = useContext(AppContext);
+  const { products, currency } = useContext(AppContext);
   const [productData, setProductData] = useState(null);
-  const [image, setImage] = useState("");
   const [size, setSize] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const foundProduct = products.find((item) => item.id == productId);
     if (foundProduct) {
       setProductData(foundProduct);
-      setImage(foundProduct.image[0]);
     }
   }, [productId, products]);
 
   const handleAddToCart = () => {
-    addToCart({ ...productData, selectedSize: size });
+    const itemToAdd = {
+      ...productData,
+      // selectedSize: size,
+      quantity: 1,
+    };
+    dispatch(addItem(itemToAdd));
     navigate("/cart");
   };
 
@@ -34,10 +40,7 @@ const ProductDetail = () => {
         <div className="product-main">
           <div className="product-images">
             <div className="product-images-main-image">
-              <img
-                src={productData.image}
-                alt={productData.title}
-              />
+              <img src={productData.image} alt={productData.title} />
             </div>
           </div>
 
@@ -57,20 +60,22 @@ const ProductDetail = () => {
             </p>
             <p className="description">{productData.description}</p>
 
-            <div className="size-selector">
-              <p>Select Size</p>
-              <div className="sizes">
-                {productData.sizes?.map((item, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSize(item)}
-                    className={item === size ? "active" : ""}
-                  >
-                    {item}
-                  </button>
-                ))}
+            {productData.sizes && (
+              <div className="size-selector">
+                <p>Select Size</p>
+                <div className="sizes">
+                  {productData.sizes?.map((item, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setSize(item)}
+                      className={item === size ? "active" : ""}
+                    >
+                      {item}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             <div className="buttons">
               <button onClick={handleAddToCart} className="add-to-cart">
@@ -100,8 +105,9 @@ const ProductDetail = () => {
             buying and selling of products or services over the internet.
           </p>
           <p>
-            It serves as a virtual marketplace where businesses and individuals can
-            showcase their products and conduct transactions without a physical store.
+            It serves as a virtual marketplace where businesses and individuals
+            can showcase their products and conduct transactions without a
+            physical store.
           </p>
         </div>
       </div>

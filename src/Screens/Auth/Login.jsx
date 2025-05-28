@@ -1,137 +1,36 @@
-import React, { useState, useRef, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
+// Styles & UI Components
 import "../../Styles/components/User/Login.scss";
 import Input from "../../Components/UI/Input";
 import Button from "../../Components/UI/Button";
-import UserLayout from "../../layout/UserLayout";
-import { useNavigate } from "react-router-dom";
-import getUser, { createUser } from "../../services/Auth/Login";
-import { AppContext } from "../../Context/AppContext"; // ✅ import context
 import Layout from "../../layout/Layout";
+
+// Redux actions
+import {
+  loginUser,
+  signupUser,
+  loadUserFromStorage,
+} from "../../redux/reducers/user/userSlice";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const [errors, setErrors] = useState({});
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const nameRef = useRef(null);
-  const emailRef = useRef(null);
-  const passwordRef = useRef(null);
-  const confirmPasswordRef = useRef(null);
-
-  const { setUser } = useContext(AppContext); // ✅ get setUser from context
-
-  const handleToggle = () => {
-    setIsLogin(!isLogin);
-    setFormData({
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    });
-    setErrors({});
-  };
-
-  const validate = () => {
-    const newErrors = {};
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-    if (!formData.email) {
-      newErrors.email = "Email is required";
-    } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = "Invalid email format";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    } else if (!passwordRegex.test(formData.password)) {
-      newErrors.password =
-        "Password must be at least 8 characters and include uppercase, lowercase, number, and special character";
-    }
-
-    if (!isLogin) {
-      if (!formData.name) newErrors.name = "Name is required";
-      if (!formData.confirmPassword) {
-        newErrors.confirmPassword = "Please confirm password";
-      } else if (formData.password !== formData.confirmPassword) {
-        newErrors.confirmPassword = "Passwords do not match";
-      }
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleChange = (e) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validate()) return;
-
-    if (isLogin) {
-      const user = await getUser(formData.email, formData.password);
-      if (!user) {
-        setErrors({ email: "Invalid email or password" });
-        return;
-      }
-
-      // ✅ Save to localStorage and update context
-      localStorage.setItem("user", JSON.stringify(user));
-      setUser(user);
-
-      switch (user.role) {
-        case "admin":
-          navigate("/admin/dashboard");
-          break;
-        case "vendor":
-          navigate("/vendor/dashboard");
-          break;
-        default:
-          navigate("/");
-      }
-    } else {
-      const newUser = {
-        username: formData.name,
-        email: formData.email,
-        password: formData.password,
-        role: "user",
-      };
-
-      const createdUser = await createUser(newUser);
-
-      if (!createdUser) {
-        setErrors({ email: "Signup failed. Please try again." });
-        return;
-      }
-
-      localStorage.setItem("user", JSON.stringify(createdUser));
-      setUser(createdUser);
-      navigate("/");
-    }
-  };
-
-  const handleKeyDown = (e, nextRef) => {
-    if (e.key === "Enter" && nextRef?.current) {
-      e.preventDefault();
-      nextRef.current.focus();
-    }
-  };
+  const { user, loading, error } = useSelector((state) => state.user);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      setUser(user); // ✅ ensure context stays synced
+    dispatch(loadUserFromStorage());
+  }, [dispatch]);
 
+  useEffect(() => {
+    if (user) {
       switch (user.role) {
         case "admin":
           navigate("/admin/dashboard");
@@ -143,111 +42,157 @@ const Login = () => {
           navigate("/");
       }
     }
-  }, [navigate, setUser]);
+  }, [user, navigate]);
+
+  const handleToggleMode = () => {
+    setIsLogin((prev) => !prev);
+  };
+
+  const getValidationSchema = () => {
+    return Yup.object().shape({
+      name: isLogin ? Yup.string() : Yup.string().required("Name is required"),
+      email: Yup.string()
+        .email("Invalid email address")
+        .required("Email is required"),
+      password: Yup.string()
+        .required("Password is required")
+        .matches(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
+          "Password must include upper, lower, number, and special character"
+        )
+        .min(8, "Password must be at least 8 characters long"),
+      confirmPassword: isLogin
+        ? Yup.string()
+        : Yup.string()
+            .required("Confirm your password")
+            .oneOf([Yup.ref("password"), null], "Passwords must match"),
+    });
+  };
+
+  const handleSubmit = (values) => {
+    if (isLogin) {
+      dispatch(loginUser({ email: values.email, password: values.password }));
+    } else {
+      const newUser = {
+        username: values.name,
+        email: values.email,
+        password: values.password,
+        role: "user",
+        blocked: "false",
+      };
+      dispatch(signupUser(newUser));
+    }
+  };
 
   return (
     <Layout className="container">
       <div className="login">
         <div className="forms">
-          <form className="Login-form" onSubmit={handleSubmit}>
-            <p>{isLogin ? "Login" : "Create account"}</p>
-            <p className="desc">
-              {isLogin
-                ? "Login to shop Goodies"
-                : "Signup to be a part of shopping hub"}
-            </p>
+          <Formik
+            initialValues={{
+              name: "",
+              email: "",
+              password: "",
+              confirmPassword: "",
+            }}
+            validationSchema={getValidationSchema()}
+            onSubmit={handleSubmit}
+          >
+            {({ isSubmitting }) => (
+              <Form className="Login-form">
+                <p>{isLogin ? "Login" : "Create Account"}</p>
+                <p className="desc">
+                  {isLogin
+                    ? "Login to start shopping"
+                    : "Sign up to join our shopping community"}
+                </p>
 
-            {!isLogin && (
-              <div className="content">
-                <Input
-                  type="text"
-                  name="name"
-                  placeholder="Username"
-                  className="inputBox"
-                  value={formData.name}
-                  onChange={handleChange}
-                  ref={nameRef}
-                  onKeyDown={(e) => handleKeyDown(e, emailRef)}
-                />
-                {errors.name && <small className="error">{errors.name}</small>}
-              </div>
-            )}
-
-            <div className="content">
-              <Input
-                type="email"
-                name="email"
-                placeholder="Email address"
-                className="inputBox"
-                value={formData.email}
-                onChange={handleChange}
-                ref={emailRef}
-                onKeyDown={(e) => handleKeyDown(e, passwordRef)}
-              />
-              {errors.email && <small className="error">{errors.email}</small>}
-            </div>
-
-            <div className="content">
-              <Input
-                type="password"
-                name="password"
-                placeholder="Enter your password"
-                className="inputBox"
-                value={formData.password}
-                onChange={handleChange}
-                ref={passwordRef}
-                onKeyDown={(e) =>
-                  handleKeyDown(e, isLogin ? null : confirmPasswordRef)
-                }
-              />
-              {errors.password && (
-                <small className="error">{errors.password}</small>
-              )}
-              <small className="hint">Example: MyPass@123</small>
-            </div>
-
-            {!isLogin && (
-              <div className="content">
-                <Input
-                  type="password"
-                  name="confirmPassword"
-                  placeholder="Re-enter your password"
-                  className="inputBox"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  ref={confirmPasswordRef}
-                />
-                {errors.confirmPassword && (
-                  <small className="error">{errors.confirmPassword}</small>
+                {!isLogin && (
+                  <div className="content">
+                    <Field
+                      name="name"
+                      as={Input}
+                      type="text"
+                      placeholder="Username"
+                      className="inputBox"
+                    />
+                    <ErrorMessage name="name" component="small" className="error" />
+                  </div>
                 )}
-              </div>
-            )}
 
-            {isLogin && (
-              <div className="forgot-password">
-                <a href="/auth/forgot-password">Forgot Password?</a>
-              </div>
-            )}
+                <div className="content">
+                  <Field
+                    name="email"
+                    as={Input}
+                    type="email"
+                    placeholder="Email Address"
+                    className="inputBox"
+                  />
+                  <ErrorMessage name="email" component="small" className="error" />
+                </div>
 
-            <Button className="submit" type="submit">
-              {isLogin ? "Login" : "Sign Up"}
-            </Button>
+                <div className="content">
+                  <Field
+                    name="password"
+                    as={Input}
+                    type="password"
+                    placeholder="Enter Password"
+                    className="inputBox"
+                  />
+                  <ErrorMessage name="password" component="small" className="error" />
+                  <small className="hint">Example: MyPass@123</small>
+                </div>
 
-            <div className="signup-cta">
-              <p>
-                {isLogin
-                  ? "Don't have an account?"
-                  : "Already have an account?"}{" "}
-                <button
-                  type="button"
-                  onClick={handleToggle}
-                  className="link-btn"
+                {!isLogin && (
+                  <div className="content">
+                    <Field
+                      name="confirmPassword"
+                      as={Input}
+                      type="password"
+                      placeholder="Confirm Password"
+                      className="inputBox"
+                    />
+                    <ErrorMessage
+                      name="confirmPassword"
+                      component="small"
+                      className="error"
+                    />
+                  </div>
+                )}
+
+                {isLogin && (
+                  <div className="forgot-password">
+                    <a href="/auth/forgot-password">Forgot Password?</a>
+                  </div>
+                )}
+
+                <Button
+                  className="submit"
+                  type="submit"
+                  disabled={isSubmitting || loading}
                 >
-                  {isLogin ? "Sign Up" : "Login"}
-                </button>
-              </p>
-            </div>
-          </form>
+                  {loading ? "Processing..." : isLogin ? "Login" : "Sign Up"}
+                </Button>
+
+                {error && <small className="error">{error}</small>}
+
+                <div className="signup-cta">
+                  <p>
+                    {isLogin
+                      ? "Don't have an account?"
+                      : "Already have an account?"}{" "}
+                    <button
+                      type="button"
+                      onClick={handleToggleMode}
+                      className="link-btn"
+                    >
+                      {isLogin ? "Sign Up" : "Login"}
+                    </button>
+                  </p>
+                </div>
+              </Form>
+            )}
+          </Formik>
         </div>
       </div>
     </Layout>
